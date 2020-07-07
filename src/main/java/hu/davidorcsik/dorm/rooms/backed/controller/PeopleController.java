@@ -2,15 +2,28 @@ package hu.davidorcsik.dorm.rooms.backed.controller;
 
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
-import hu.davidorcsik.dorm.rooms.backed.status.PeopleDataStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PeopleController {
     @PostMapping("/people/add")
-    public PeopleDataStatus[] add(@RequestBody People p) {
-        return PeopleModel.add(p).toArray(new PeopleDataStatus[0]);
+    public PeopleRequestStatus[] add(@RequestBody People p) {
+        return PeopleModel.getInstance().add(p).toArray(new PeopleRequestStatus[0]);
+    }
+
+    @PostMapping("/people/delete")
+    public PeopleRequestStatus[] delete(@RequestBody People p) {
+        return PeopleModel.getInstance().delete(p).toArray(new PeopleRequestStatus[0]);
+    }
+
+    @PostMapping("/people/modify")
+    public PeopleRequestStatus[] modify(@RequestBody People p) {
+        return PeopleModel.getInstance().modify(p).toArray(new PeopleRequestStatus[0]);
+    }
+
+    @GetMapping("/people/getAll")
+    public People[] getAll() {
+        return PeopleModel.getInstance().getAll().toArray(new People[0]);
     }
 }

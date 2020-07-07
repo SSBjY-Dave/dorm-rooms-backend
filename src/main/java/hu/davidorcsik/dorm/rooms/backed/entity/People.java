@@ -1,15 +1,20 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
-import hu.davidorcsik.dorm.rooms.backed.status.PeopleDataStatus;
+import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+@Entity
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor()
+@AllArgsConstructor
 public class People {
     private static Pattern neptunIdPattern = Pattern.compile("^[a-z0-9]{6}$");
     private static Pattern emailPattern = Pattern.compile("^([A-z0-9\\.\\-\\_]+)@([a-z0-9\\.\\-\\_]+)\\.([a-z]{2,})$");
@@ -31,15 +36,17 @@ public class People {
         return sex == 0 || sex == 1;
     }
 
-    public static ArrayList<PeopleDataStatus> isPeopleValid(People p) {
-        ArrayList<PeopleDataStatus> status = new ArrayList<>();
-        if (!isNeptunIdValid(p.neptunId)) status.add(PeopleDataStatus.NEPTUN_ID_INVALID);
-        if (!isEmailValid(p.email)) status.add(PeopleDataStatus.EMAIL_INVALID);
-        if (!isTokenValid(p.token)) status.add(PeopleDataStatus.TOKEN_INVALID);
-        if (!isSexValid(p.sex)) status.add(PeopleDataStatus.SEX_INVALID);
+    public static ArrayList<PeopleRequestStatus> isPeopleValid(People p) {
+        ArrayList<PeopleRequestStatus> status = new ArrayList<>();
+        if (!isNeptunIdValid(p.neptunId)) status.add(PeopleRequestStatus.NEPTUN_ID_INVALID);
+        if (!isEmailValid(p.email)) status.add(PeopleRequestStatus.EMAIL_INVALID);
+        if (!isTokenValid(p.token)) status.add(PeopleRequestStatus.TOKEN_INVALID);
+        if (!isSexValid(p.sex)) status.add(PeopleRequestStatus.SEX_INVALID);
         return status;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String neptunId;

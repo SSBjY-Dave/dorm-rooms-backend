@@ -1,0 +1,38 @@
+package hu.davidorcsik.dorm.rooms.backed.model;
+
+import hu.davidorcsik.dorm.rooms.backed.database.RoomRepo;
+import hu.davidorcsik.dorm.rooms.backed.entity.Room;
+import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+
+@Service
+public class RoomModel {
+    private static RoomModel instance;
+
+    public static RoomModel getInstance() {
+        return instance;
+    }
+
+    private final RoomRepo roomRepo;
+
+    @Autowired
+    public RoomModel(RoomRepo roomRepo) {
+        this.roomRepo = roomRepo;
+        instance = this;
+    }
+
+    public ArrayList<RoomRequestStatus> modify(Room r) {
+        ArrayList<RoomRequestStatus> status = new ArrayList<>(Room.isRoomValid(r));
+        if (!status.isEmpty()) return status;
+
+        if (roomRepo.existsById(r.getId())) status.add(RoomRequestStatus.ID_DOES_NOT_EXISTS);
+        if (!status.isEmpty()) return status;
+
+        roomRepo.save(r);
+        status.add(RoomRequestStatus.OK);
+        return status;
+    }
+}

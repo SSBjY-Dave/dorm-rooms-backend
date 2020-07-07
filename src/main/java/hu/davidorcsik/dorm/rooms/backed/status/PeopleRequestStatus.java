@@ -1,7 +1,8 @@
 package hu.davidorcsik.dorm.rooms.backed.status;
 
-public enum PeopleDataStatus {
+public enum PeopleRequestStatus {
     OK,
+    ID_INVALID, ID_ALREADY_EXISTS,
     NAME_INVALID,
     NEPTUN_ID_INVALID, NEPTUN_ID_ALREADY_EXISTS,
     EMAIL_INVALID, EMAIL_ALREADY_EXSITS,
