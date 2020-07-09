@@ -44,7 +44,7 @@ public class LabelModel {
         if (!labelRepo.existsByName(l.getName())) status.add(LabelRequestStatus.NAME_DOES_NOT_EXISTS);
         if (!status.isEmpty()) return status;
 
-        labelRepo.save(l);
+        labelRepo.delete(l);
         status.add(LabelRequestStatus.OK);
         return status;
     }
@@ -54,10 +54,10 @@ public class LabelModel {
         if (!status.isEmpty()) return status;
 
         if (!labelRepo.existsById(l.getId())) status.add(LabelRequestStatus.ID_DOES_NOT_EXISTS);
-        if (!labelRepo.existsByName(l.getName())) status.add(LabelRequestStatus.NAME_DOES_NOT_EXISTS);
+        if (!labelRepo.existsByName(l.getName())) status.add(LabelRequestStatus.NAME_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
 
-        labelRepo.delete(l);
+        labelRepo.save(l);
         status.add(LabelRequestStatus.OK);
         return status;
     }

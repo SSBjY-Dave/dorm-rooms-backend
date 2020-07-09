@@ -1,23 +1,37 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Table(name = "room_connector")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RoomConnector {
-    private long people_id;
-    private long room_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "people_id", referencedColumnName = "id")
+    private People people;
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
+    private Room room;
 
-    public long getPeople_id() {
-        return people_id;
+    public People getPeople() {
+        return people;
     }
 
-    public long getRoom_id() {
-        return room_id;
+    public Room getRoom() {
+        return room;
     }
 }

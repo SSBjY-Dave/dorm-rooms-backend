@@ -25,7 +25,7 @@ public class PeopleModel {
     }
 
     public ArrayList<PeopleRequestStatus> add(People p) {
-        ArrayList<PeopleRequestStatus> status = new ArrayList<>(People.isPeopleValid(p));
+        ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
 
         if (peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_ALREADY_EXISTS);
@@ -54,12 +54,11 @@ public class PeopleModel {
     }
 
     public ArrayList<PeopleRequestStatus> modify(People p) {
-        ArrayList<PeopleRequestStatus> status = new ArrayList<>();
-
-        if (!peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_INVALID);
+        ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
 
-        status.addAll(People.isPeopleValid(p));
+        if (!peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_INVALID);
+        //TODO: Check if data already in use
         if (!status.isEmpty()) return status;
 
         peopleRepo.save(p); //TODO: more security or something

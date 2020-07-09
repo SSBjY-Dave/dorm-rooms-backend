@@ -1,22 +1,24 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "rooms")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
     public static boolean isIdValid(long id, int level, int roomNumber) {
         return id == level * 100 + roomNumber;
@@ -46,6 +48,8 @@ public class Room {
     private int level;
     private int roomNumber;
     private boolean locked;
+    @OneToMany(mappedBy = "room")
+    private List<RoomConnector> roomConnectors;
 
     public long getId() {
         return id;

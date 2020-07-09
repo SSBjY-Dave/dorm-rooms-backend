@@ -25,7 +25,7 @@ public class RoomModel {
     }
 
     public ArrayList<RoomRequestStatus> modify(Room r) {
-        ArrayList<RoomRequestStatus> status = new ArrayList<>(Room.isRoomValid(r));
+        ArrayList<RoomRequestStatus> status = Room.isRoomValid(r);
         if (!status.isEmpty()) return status;
 
         if (roomRepo.existsById(r.getId())) status.add(RoomRequestStatus.ID_DOES_NOT_EXISTS);
