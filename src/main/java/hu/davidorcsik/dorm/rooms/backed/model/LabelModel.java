@@ -43,7 +43,7 @@ public class LabelModel {
         if (!labelRepo.existsById(l.getId())) status.add(LabelRequestStatus.ID_DOES_NOT_EXISTS);
         if (!labelRepo.existsByName(l.getName())) status.add(LabelRequestStatus.NAME_DOES_NOT_EXISTS);
         if (!status.isEmpty()) return status;
-
+        //TODO: delete label connection
         labelRepo.delete(l);
         status.add(LabelRequestStatus.OK);
         return status;

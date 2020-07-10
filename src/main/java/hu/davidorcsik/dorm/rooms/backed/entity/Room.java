@@ -3,10 +3,8 @@ package hu.davidorcsik.dorm.rooms.backed.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +18,7 @@ import java.util.List;
 @Table(name = "rooms")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
+    public static int CAPACITY = 2;
     public static boolean isIdValid(long id, int level, int roomNumber) {
         return id == level * 100 + roomNumber;
     }
@@ -44,11 +43,16 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ReadOnlyProperty
     private long id;
+    @ReadOnlyProperty
     private int level;
+    @ReadOnlyProperty
     private int roomNumber;
     private boolean locked;
     @OneToMany(mappedBy = "room")
+    @ReadOnlyProperty
+    @ToString.Exclude
     private List<RoomConnector> roomConnectors;
 
     public long getId() {
@@ -83,5 +87,9 @@ public class Room {
 
     private void recalculateId() {
         this.id = level * 100 + roomNumber;
+    }
+
+    public boolean isFull() {
+        return roomConnectors.size() >= CAPACITY;
     }
 }

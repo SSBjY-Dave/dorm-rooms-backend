@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class RoomModel {
@@ -24,11 +25,15 @@ public class RoomModel {
         instance = this;
     }
 
+    public Optional<Room> getDatabaseObject(Room r) {
+        return roomRepo.findById(r.getId());
+    }
+
     public ArrayList<RoomRequestStatus> modify(Room r) {
         ArrayList<RoomRequestStatus> status = Room.isRoomValid(r);
         if (!status.isEmpty()) return status;
 
-        if (roomRepo.existsById(r.getId())) status.add(RoomRequestStatus.ID_DOES_NOT_EXISTS);
+        if (!roomRepo.existsById(r.getId())) status.add(RoomRequestStatus.ID_DOES_NOT_EXISTS);
         if (!status.isEmpty()) return status;
 
         roomRepo.save(r);

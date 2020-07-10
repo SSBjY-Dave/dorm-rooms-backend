@@ -3,10 +3,8 @@ package hu.davidorcsik.dorm.rooms.backed.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.status.LabelRequestStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -39,9 +37,11 @@ public class Label {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ReadOnlyProperty
     private long id;
     private String name;
     @OneToMany(mappedBy = "label")
+    @ToString.Exclude
     private List<LabelConnector> labelConnectors;
 
     public long getId() {

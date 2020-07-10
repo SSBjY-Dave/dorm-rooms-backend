@@ -2,10 +2,8 @@ package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 
@@ -19,14 +17,19 @@ import javax.persistence.*;
 public class LabelConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ReadOnlyProperty
     private long id;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "people_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @ReadOnlyProperty
     private People people;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "label_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @ReadOnlyProperty
     private Label label;
 
     public long getId() {

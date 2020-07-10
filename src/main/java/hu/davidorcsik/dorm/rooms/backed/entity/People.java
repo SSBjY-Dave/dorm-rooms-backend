@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -51,18 +52,27 @@ public class People {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ReadOnlyProperty
     private long id;
     private String name;
     private String neptunId;
     private String email;
     private boolean newbie;
     private String token;
+
     @Enumerated(EnumType.ORDINAL)
     private Sex sex;
+
     @OneToMany(mappedBy = "people")
+    @ReadOnlyProperty
+    @ToString.Exclude
+
     private List<LabelConnector> labelConnectors;
+
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "id", referencedColumnName = "people_id")
+    @ReadOnlyProperty
+    @ToString.Exclude
     private RoomConnector roomConnector;
 
     public long getId() {

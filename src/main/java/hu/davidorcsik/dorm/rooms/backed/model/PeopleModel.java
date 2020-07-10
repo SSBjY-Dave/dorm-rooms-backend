@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class PeopleModel {
@@ -22,6 +23,10 @@ public class PeopleModel {
     public PeopleModel(PeopleRepo peopleRepo) {
         this.peopleRepo = peopleRepo;
         instance = this;
+    }
+
+    public Optional<People> getDatabaseObejct(People p) {
+        return peopleRepo.findById(p.getId());
     }
 
     public ArrayList<PeopleRequestStatus> add(People p) {
@@ -47,7 +52,7 @@ public class PeopleModel {
         if (!peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_INVALID);
         if (!peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_INVALID);
         if (!status.isEmpty()) return status;
-
+        //TODO: Delete reservation and label connection
         peopleRepo.delete(p);
         status.add(PeopleRequestStatus.OK);
         return status;

@@ -2,10 +2,8 @@ package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 
@@ -20,12 +18,23 @@ public class RoomConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "people_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @ReadOnlyProperty
     private People people;
+
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @ReadOnlyProperty
     private Room room;
+
+    public RoomConnector(People people, Room room) {
+        this.people = people;
+        this.room = room;
+    }
 
     public People getPeople() {
         return people;

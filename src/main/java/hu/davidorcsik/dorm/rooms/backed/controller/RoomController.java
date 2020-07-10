@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoomController {
     @PostMapping("/room/modify")
     public RoomRequestStatus[] modify(@RequestBody Room r) {
+        //TODO: security
         return RoomModel.getInstance().modify(r).toArray(new RoomRequestStatus[0]);
     }
+
+    //TODO: lock room according to sex
+
 }
