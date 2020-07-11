@@ -16,10 +16,10 @@ import java.util.Optional;
 public class LabelAssociationController {
     @PostMapping("/labelAssociation/disassociate")
     public LabelAssociationRequestStatus disassociate(LabelAssociationData lad) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseObejct(lad.getPeople());
+        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(lad.getPeople());
         if (p.isEmpty()) return LabelAssociationRequestStatus.PEOPLE_ID_INVALID;
 
-        Optional<Label> l = LabelModel.getInstance().getDatabaseObject(lad.getLabel());
+        Optional<Label> l = LabelModel.getInstance().getDatabaseEntity(lad.getLabel());
         if (l.isEmpty()) return LabelAssociationRequestStatus.LABEL_ID_INVALID;
 
         return LabelAssociationModel.getInstance().disassociate(p.get(), l.get());
@@ -27,10 +27,10 @@ public class LabelAssociationController {
 
     @PostMapping("/labelAssociation/associate")
     public LabelAssociationRequestStatus associate(LabelAssociationData lad) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseObejct(lad.getPeople());
+        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(lad.getPeople());
         if (p.isEmpty()) return LabelAssociationRequestStatus.PEOPLE_ID_INVALID;
 
-        Optional<Label> l = LabelModel.getInstance().getDatabaseObject(lad.getLabel());
+        Optional<Label> l = LabelModel.getInstance().getDatabaseEntity(lad.getLabel());
         if (l.isEmpty()) return LabelAssociationRequestStatus.LABEL_ID_INVALID;
 
         return LabelAssociationModel.getInstance().assign(p.get(), l.get());

@@ -18,10 +18,10 @@ public class ReservationController {
 
     @PostMapping("/reservation/applyForRoom")
     public ReservationRequestStatus applyForRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseObejct(rd.getPeople());
+        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
         if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
 
-        Optional<Room> r = RoomModel.getInstance().getDatabaseObject(rd.getRoom());
+        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
         if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
         return ReservationModel.getInstance().applyForRoom(p.get(), r.get());
@@ -29,7 +29,7 @@ public class ReservationController {
 
     @PostMapping("/reservation/leaveRoom")
     public ReservationRequestStatus leaveRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseObejct(rd.getPeople());
+        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
         if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
 
         return ReservationModel.getInstance().leaveRoom(p.get());
@@ -37,10 +37,10 @@ public class ReservationController {
 
     @PostMapping("/reservation/changeRoom")
     public ReservationRequestStatus changeRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseObejct(rd.getPeople());
+        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
         if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
 
-        Optional<Room> r = RoomModel.getInstance().getDatabaseObject(rd.getRoom());
+        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
         if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
         return ReservationModel.getInstance().changeRoom(p.get(), r.get());
@@ -48,10 +48,10 @@ public class ReservationController {
 
     @PostMapping("/reservation/assignToRoom")
     public ReservationRequestStatus assignToRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseObejct(rd.getPeople());
+        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
         if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
 
-        Optional<Room> r = RoomModel.getInstance().getDatabaseObject(rd.getRoom());
+        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
         if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
         //TODO: security
@@ -60,7 +60,7 @@ public class ReservationController {
 
     @PostMapping("/reservation/clearRoom")
     public ReservationRequestStatus clearRoom(@RequestBody ReservationData rd) {
-        Optional<Room> r = RoomModel.getInstance().getDatabaseObject(rd.getRoom());
+        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
         if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
         //TODO: security

@@ -3,6 +3,7 @@ package hu.davidorcsik.dorm.rooms.backed.model;
 import hu.davidorcsik.dorm.rooms.backed.database.RoomRepo;
 import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
+import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,19 @@ public class RoomModel {
         instance = this;
     }
 
-    public Optional<Room> getDatabaseObject(Room r) {
+    public Optional<Room> getDatabaseEntity(Room r) {
         return roomRepo.findById(r.getId());
     }
 
-    public ArrayList<RoomRequestStatus> modify(Room r) {
-        ArrayList<RoomRequestStatus> status = Room.isRoomValid(r);
-        if (!status.isEmpty()) return status;
-
-        if (!roomRepo.existsById(r.getId())) status.add(RoomRequestStatus.ID_DOES_NOT_EXISTS);
-        if (!status.isEmpty()) return status;
-
+    public RoomRequestStatus setLockState(Room r, boolean lockState) {
+        r.setLocked(lockState);
         roomRepo.save(r);
-        status.add(RoomRequestStatus.OK);
-        return status;
+        return RoomRequestStatus.OK;
+    }
+
+    public RoomRequestStatus setAllowedSex(Room r, Sex sex) {
+        r.setSex(sex);
+        roomRepo.save(r);
+        return RoomRequestStatus.OK;
     }
 }

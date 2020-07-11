@@ -26,7 +26,7 @@ public class PeopleModel {
         instance = this;
     }
 
-    public Optional<People> getDatabaseObejct(People p) {
+    public Optional<People> getDatabaseEntity(People p) {
         return peopleRepo.findById(p.getId());
     }
 

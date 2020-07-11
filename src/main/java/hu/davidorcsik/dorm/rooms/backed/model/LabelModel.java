@@ -27,7 +27,7 @@ public class LabelModel {
         instance = this;
     }
 
-    public Optional<Label> getDatabaseObject(Label l) {
+    public Optional<Label> getDatabaseEntity(Label l) {
         return labelRepo.findById(l.getId());
     }
 
