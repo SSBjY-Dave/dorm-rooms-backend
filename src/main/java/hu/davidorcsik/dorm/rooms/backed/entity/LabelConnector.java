@@ -32,6 +32,11 @@ public class LabelConnector {
     @ReadOnlyProperty
     private Label label;
 
+    public LabelConnector(People people, Label label) {
+        this.people = people;
+        this.label = label;
+    }
+
     public long getId() {
         return id;
     }
@@ -40,15 +45,7 @@ public class LabelConnector {
         return people;
     }
 
-    public void setPeople(People people) {
-        this.people = people;
-    }
-
     public Label getLabel() {
         return label;
-    }
-
-    public void setLabel_id(Label label) {
-        this.label = label;
     }
 }

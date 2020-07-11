@@ -66,7 +66,6 @@ public class People {
     @OneToMany(mappedBy = "people")
     @ReadOnlyProperty
     @ToString.Exclude
-
     private List<LabelConnector> labelConnectors;
 
     @OneToOne(cascade = CascadeType.DETACH)

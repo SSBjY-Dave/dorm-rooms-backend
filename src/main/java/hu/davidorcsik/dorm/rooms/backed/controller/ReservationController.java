@@ -70,4 +70,6 @@ public class ReservationController {
     //TODO: assignToRoom - administrative function, do not care about sex
     //TODO: please somebody figure out how in the holy old fuck does the spring security extension works
     // it looks like a clusterfuck of builder patterns :'(
+
+    //TODO: assignToRoom and clearRoom is for the admin, they must be protected from normal users
 }

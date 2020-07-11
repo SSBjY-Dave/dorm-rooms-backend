@@ -29,4 +29,6 @@ public class LabelController {
     public Label[] getAll() {
         return LabelModel.getInstance().getAll().toArray(new Label[0]);
     }
+
+    //TODO: all mapping except in this controller except getAll is for the admin, they must be protected from normal users
 }

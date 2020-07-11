@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface RoomConnectorRepo extends CrudRepository<RoomConnector, Long> {
     Optional<RoomConnector> findByPeople(People p);
     Iterable<RoomConnector> findAllByRoom(Room r);
-    Long countByRoom(Room r);
+    long countByRoom(Room r);
 }

@@ -65,30 +65,16 @@ public class Room {
         return level;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-        recalculateId();
-    }
-
     public int getRoomNumber() {
         return roomNumber;
     }
-
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
-        recalculateId();
-    }
-
+    
     public boolean isLocked() {
         return locked;
     }
 
     public void setLocked(boolean locked) {
         this.locked = locked;
-    }
-
-    private void recalculateId() {
-        this.id = level * 100 + roomNumber;
     }
 
     public boolean isFull() {

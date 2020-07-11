@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class LabelModel {
@@ -23,6 +24,10 @@ public class LabelModel {
         assert(instance == null);
         this.labelRepo = labelRepo;
         instance = this;
+    }
+
+    public Optional<Label> getDatabaseObject(Label l) {
+        return labelRepo.findById(l.getId());
     }
 
     public ArrayList<LabelRequestStatus> add(Label l) {

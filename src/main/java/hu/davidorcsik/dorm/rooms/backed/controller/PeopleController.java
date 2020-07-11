@@ -29,4 +29,6 @@ public class PeopleController {
 
     //TODO: create a mapping similar to getAll but it MUST NOT include
     // a person's id, token, neptun and email, but keep it on controller level
+
+    //TODO: all mapping in this controller is for the admin, they must be protected from normal users
 }

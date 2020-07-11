@@ -17,4 +17,5 @@ public class RoomController {
 
     //TODO: lock room according to sex
 
+    //TODO: all mapping in this controller is for the admin, they must be protected from normal users
 }
