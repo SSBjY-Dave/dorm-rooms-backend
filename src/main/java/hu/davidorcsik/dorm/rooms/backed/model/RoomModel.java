@@ -21,6 +21,7 @@ public class RoomModel {
 
     @Autowired
     public RoomModel(RoomRepo roomRepo) {
+        assert(instance == null);
         this.roomRepo = roomRepo;
         instance = this;
     }

@@ -9,6 +9,7 @@ import hu.davidorcsik.dorm.rooms.backed.entity.RoomConnector;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,9 +24,11 @@ public class ReservationModel {
     private final PeopleRepo peopleRepo;
     private final RoomRepo roomRepo;
     private final RoomConnectorRepo roomConnectorRepo;
+    private static final Object reservationSynchronizationObject = new Object();
 
     @Autowired
     public ReservationModel(PeopleRepo peopleRepo, RoomRepo roomRepo, RoomConnectorRepo roomConnectorRepo) {
+        assert(instance == null);
         this.peopleRepo = peopleRepo;
         this.roomRepo = roomRepo;
         this.roomConnectorRepo = roomConnectorRepo;
@@ -33,7 +36,7 @@ public class ReservationModel {
     }
 
     public ReservationRequestStatus applyForRoom(People people, Room room) {
-        //TODO: check room sex
+        //TODO: check room sex and locked state
         return assignToRoom(people, room);
     }
 
@@ -69,11 +72,28 @@ public class ReservationModel {
         if (rc.isPresent()) return ReservationRequestStatus.RESERVATION_ALREADY_EXISTS;
 
         if (!roomRepo.existsById(room.getId())) return ReservationRequestStatus.ROOM_ID_INVALID;
-        Iterable<RoomConnector> rcs = roomConnectorRepo.findAllByRoom(room);
         if (room.isFull()) return ReservationRequestStatus.ROOM_ALREADY_FULL;
 
-        RoomConnector reservation = new RoomConnector(people, room);
-        roomConnectorRepo.save(reservation);
+        try {
+            addReservation(new RoomConnector(people, room));
+        } catch (IllegalStateException e) {
+            return ReservationRequestStatus.DATA_RACE_LOST;
+        }
+
         return ReservationRequestStatus.OK;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    protected void addReservation(RoomConnector reservation) {
+        Room r = roomRepo.findById(reservation.getRoom().getId()).get();
+        if (r.isOverfilled()) throw new IllegalStateException("Data race lost");
+        roomConnectorRepo.save(reservation);
+        //TODO: this synchronization should be avoided and the database engine should take care of it.
+        // we should find a way to do it in spring but for now it'll do. however it can be very slow if there a lot of
+        // simulations reservation request (not limited to one room queue)
+        synchronized (reservationSynchronizationObject) {
+            r = roomRepo.findById(reservation.getRoom().getId()).get();
+            if (r.isOverfilled()) throw new IllegalStateException("Data race lost");
+        }
     }
 }

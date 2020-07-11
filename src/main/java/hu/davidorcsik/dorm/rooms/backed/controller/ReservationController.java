@@ -67,7 +67,7 @@ public class ReservationController {
         return ReservationModel.getInstance().clearRoom(r.get());
     }
 
-    //TODO: applyForRoom - transaction
-    //TODO: changeRoom - transaction
-    //TODO: assignToRoom - transaction, administrative function, do not care about sex
+    //TODO: assignToRoom - administrative function, do not care about sex
+    //TODO: please somebody figure out how in the holy old fuck does the spring security extension works
+    // it looks like a clusterfuck of builder patterns :'(
 }

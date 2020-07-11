@@ -20,6 +20,7 @@ public class LabelModel {
 
     @Autowired
     public LabelModel(LabelRepo labelRepo) {
+        assert(instance == null);
         this.labelRepo = labelRepo;
         instance = this;
     }

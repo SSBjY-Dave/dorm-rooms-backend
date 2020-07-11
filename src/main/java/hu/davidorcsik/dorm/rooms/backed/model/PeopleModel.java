@@ -21,6 +21,7 @@ public class PeopleModel {
 
     @Autowired
     public PeopleModel(PeopleRepo peopleRepo) {
+        assert(instance == null);
         this.peopleRepo = peopleRepo;
         instance = this;
     }
@@ -52,6 +53,8 @@ public class PeopleModel {
         if (!peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_INVALID);
         if (!peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_INVALID);
         if (!status.isEmpty()) return status;
+
+        ReservationModel.getInstance().leaveRoom(p);
         //TODO: Delete reservation and label connection
         peopleRepo.delete(p);
         status.add(PeopleRequestStatus.OK);
@@ -63,7 +66,10 @@ public class PeopleModel {
         if (!status.isEmpty()) return status;
 
         if (!peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_INVALID);
-        //TODO: Check if data already in use
+
+        if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
+        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXSITS);
+        if (peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
 
         peopleRepo.save(p); //TODO: more security or something

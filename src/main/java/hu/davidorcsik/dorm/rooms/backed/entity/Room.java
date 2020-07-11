@@ -18,6 +18,8 @@ import java.util.List;
 @Table(name = "rooms")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
+    //TODO: for expandability reasons the capacity should be part of the database prototype
+    // please somebody do it I cannot be bothered :D
     public static int CAPACITY = 2;
     public static boolean isIdValid(long id, int level, int roomNumber) {
         return id == level * 100 + roomNumber;
@@ -91,5 +93,9 @@ public class Room {
 
     public boolean isFull() {
         return roomConnectors.size() >= CAPACITY;
+    }
+
+    public boolean isOverfilled() {
+        return roomConnectors.size() > CAPACITY;
     }
 }
