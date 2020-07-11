@@ -18,9 +18,6 @@ import java.util.List;
 @Table(name = "rooms")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
-    //TODO: for expandability reasons the capacity should be part of the database prototype
-    // please somebody do it I cannot be bothered :D
-    public static int CAPACITY = 2;
     public static boolean isIdValid(long id, int level, int roomNumber) {
         return id == level * 100 + roomNumber;
     }
@@ -52,6 +49,8 @@ public class Room {
     @ReadOnlyProperty
     private int roomNumber;
     private boolean locked;
+    @ReadOnlyProperty
+    private int capacity;
     @OneToMany(mappedBy = "room")
     @ReadOnlyProperty
     @ToString.Exclude
@@ -68,7 +67,7 @@ public class Room {
     public int getRoomNumber() {
         return roomNumber;
     }
-    
+
     public boolean isLocked() {
         return locked;
     }
@@ -78,10 +77,10 @@ public class Room {
     }
 
     public boolean isFull() {
-        return roomConnectors.size() >= CAPACITY;
+        return roomConnectors.size() >= capacity;
     }
 
     public boolean isOverfilled() {
-        return roomConnectors.size() > CAPACITY;
+        return roomConnectors.size() > capacity;
     }
 }
