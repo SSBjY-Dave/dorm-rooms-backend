@@ -36,7 +36,8 @@ public class ReservationModel {
     }
 
     public ReservationRequestStatus applyForRoom(People people, Room room) {
-        //TODO: check room sex and locked state
+        if (room.isLocked()) return ReservationRequestStatus.ROOM_IS_LOCKED;
+        if (!people.getSex().equals(room.getSex())) return ReservationRequestStatus.SEX_INVALID;
         return assignToRoom(people, room);
     }
 

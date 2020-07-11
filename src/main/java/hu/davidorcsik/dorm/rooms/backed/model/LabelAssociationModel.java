@@ -34,6 +34,16 @@ public class LabelAssociationModel {
         return LabelAssociationRequestStatus.OK;
     }
 
+    public LabelAssociationRequestStatus disassociateAll(People p) {
+        labelConnectorRepo.findAllByPeople(p).forEach(labelConnectorRepo::delete);
+        return LabelAssociationRequestStatus.OK;
+    }
+
+    public LabelAssociationRequestStatus disassociateAll(Label l) {
+        labelConnectorRepo.findAllByLabel(l).forEach(labelConnectorRepo::delete);
+        return LabelAssociationRequestStatus.OK;
+    }
+
     public LabelAssociationRequestStatus assign(People p, Label l) {
         Optional<LabelConnector> lc = labelConnectorRepo.findByPeopleAndLabel(p, l);
         if (lc.isPresent()) return LabelAssociationRequestStatus.LABEL_ALREADY_ASSIGNED;

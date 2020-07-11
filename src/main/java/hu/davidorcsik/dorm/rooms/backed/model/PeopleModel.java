@@ -55,7 +55,7 @@ public class PeopleModel {
         if (!status.isEmpty()) return status;
 
         ReservationModel.getInstance().leaveRoom(p);
-        //TODO: Delete reservation and label connection
+        LabelAssociationModel.getInstance().disassociateAll(p);
         peopleRepo.delete(p);
         status.add(PeopleRequestStatus.OK);
         return status;

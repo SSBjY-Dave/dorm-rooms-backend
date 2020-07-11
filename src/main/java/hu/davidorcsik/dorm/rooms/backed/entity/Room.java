@@ -3,6 +3,7 @@ package hu.davidorcsik.dorm.rooms.backed.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
+import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
@@ -51,6 +52,8 @@ public class Room {
     private boolean locked;
     @ReadOnlyProperty
     private int capacity;
+    @Enumerated(value = EnumType.ORDINAL)
+    private Sex sex;
     @OneToMany(mappedBy = "room")
     @ReadOnlyProperty
     @ToString.Exclude
@@ -74,6 +77,14 @@ public class Room {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
     }
 
     public boolean isFull() {

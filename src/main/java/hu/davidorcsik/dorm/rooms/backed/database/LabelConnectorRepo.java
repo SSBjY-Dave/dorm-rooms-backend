@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface LabelConnectorRepo extends CrudRepository<LabelConnector, Long> {
     Optional<LabelConnector> findByPeopleAndLabel(People p, Label l);
     boolean existsByPeopleAndLabel(People p, Label l);
+    Iterable<LabelConnector> findAllByPeople(People p);
+    Iterable<LabelConnector> findAllByLabel(Label l);
 }
