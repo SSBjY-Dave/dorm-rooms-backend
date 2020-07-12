@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 @Table(name = "people")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class People implements UserDetails {
+public class People {
     private static Pattern neptunIdPattern = Pattern.compile("^[a-z0-9]{6}$");
     private static Pattern emailPattern = Pattern.compile("^([A-z0-9\\.\\-\\_]+)@([a-z0-9\\.\\-\\_]+)\\.([a-z]{2,})$");
 
@@ -134,40 +134,15 @@ public class People implements UserDetails {
         this.sex = sex;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<Role> grantedRoles = new ArrayList<>();
-        roleConnector.forEach(rc -> grantedRoles.add(rc.getRole()));
-        return grantedRoles;
+    public List<LabelConnector> getLabelConnectors() {
+        return labelConnectors;
     }
 
-    @Override
-    public String getPassword() {
-        return token;
+    public RoomConnector getRoomConnector() {
+        return roomConnector;
     }
 
-    @Override
-    public String getUsername() {
-        return neptunId;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public List<RoleConnector> getRoleConnector() {
+        return roleConnector;
     }
 }

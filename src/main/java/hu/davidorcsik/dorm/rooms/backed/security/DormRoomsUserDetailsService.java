@@ -15,6 +15,6 @@ public class DormRoomsUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<People> p = PeopleModel.getInstance().getDatabaseEntityByNeptunId(username);
         if (p.isEmpty()) throw new UsernameNotFoundException("User " + username + " not found");
-        return p.get();
+        return new UserWrapper(p.get());
     }
 }
