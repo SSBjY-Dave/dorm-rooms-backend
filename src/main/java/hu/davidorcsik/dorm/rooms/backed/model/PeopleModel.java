@@ -29,6 +29,9 @@ public class PeopleModel {
     public Optional<People> getDatabaseEntity(People p) {
         return peopleRepo.findById(p.getId());
     }
+    public Optional<People> getDatabaseEntityByNeptunId(String neptunId) {
+        return peopleRepo.findByNeptunId(neptunId);
+    }
 
     public ArrayList<PeopleRequestStatus> add(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);

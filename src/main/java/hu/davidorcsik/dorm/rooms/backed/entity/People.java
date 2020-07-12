@@ -6,10 +6,13 @@ import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,7 +23,7 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 @Table(name = "people")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class People {
+public class People implements UserDetails {
     private static Pattern neptunIdPattern = Pattern.compile("^[a-z0-9]{6}$");
     private static Pattern emailPattern = Pattern.compile("^([A-z0-9\\.\\-\\_]+)@([a-z0-9\\.\\-\\_]+)\\.([a-z]{2,})$");
 
@@ -74,6 +77,11 @@ public class People {
     @ToString.Exclude
     private RoomConnector roomConnector;
 
+    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ReadOnlyProperty
+    @ToString.Exclude
+    private List<RoleConnector> roleConnector;
+
     public long getId() {
         return id;
     }
@@ -124,5 +132,42 @@ public class People {
 
     public void setSex(Sex sex) {
         this.sex = sex;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        ArrayList<Role> grantedRoles = new ArrayList<>();
+        roleConnector.forEach(rc -> grantedRoles.add(rc.getRole()));
+        return grantedRoles;
+    }
+
+    @Override
+    public String getPassword() {
+        return token;
+    }
+
+    @Override
+    public String getUsername() {
+        return neptunId;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
