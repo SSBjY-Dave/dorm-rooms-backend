@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+
 //TODO: this controller must not be part of the release build
 @RestController
 public class MainController {
@@ -18,6 +20,7 @@ public class MainController {
     public String home() {
         return "home page";
     }
+
     @GetMapping("/test")
     public People test() {
         return ((UserWrapper)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPeople();
