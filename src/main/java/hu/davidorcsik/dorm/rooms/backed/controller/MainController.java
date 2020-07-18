@@ -5,6 +5,7 @@ import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
 import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
 import hu.davidorcsik.dorm.rooms.backed.security.UserWrapper;
 import hu.davidorcsik.dorm.rooms.backed.types.ReservationData;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;

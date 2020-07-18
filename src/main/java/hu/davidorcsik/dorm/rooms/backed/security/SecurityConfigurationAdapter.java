@@ -1,5 +1,6 @@
 package hu.davidorcsik.dorm.rooms.backed.security;
 
+import hu.davidorcsik.dorm.rooms.backed.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,18 @@ public class SecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/test").hasRole("ADMIN")
+                .antMatchers("/labelAssociation/disassociate").hasRole("ADMIN")
+                .antMatchers("/labelAssociation/associate").hasRole("ADMIN")
+                .antMatchers("/label/add").hasRole("ADMIN")
+                .antMatchers("/label/delete").hasRole("ADMIN")
+                .antMatchers("/label/modify").hasRole("ADMIN")
+                .antMatchers("/label/getAll").hasRole("ADMIN")
+                .antMatchers("/people/add").hasRole("ADMIN")
+                .antMatchers("/people/delete").hasRole("ADMIN")
+                .antMatchers("/people/modify").hasRole("ADMIN")
+                .antMatchers("/reservation/assignToRoom").hasRole("ADMIN")
+                .antMatchers("/reservation/clearRoom").hasRole("ADMIN")
+                .antMatchers("/room/setLockState").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

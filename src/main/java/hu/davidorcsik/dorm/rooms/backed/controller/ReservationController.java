@@ -5,6 +5,7 @@ import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
 import hu.davidorcsik.dorm.rooms.backed.model.ReservationModel;
 import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
+import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.ReservationData;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,35 +16,27 @@ import java.util.Optional;
 
 @RestController
 public class ReservationController {
-
     @PostMapping("/reservation/applyForRoom")
-    public ReservationRequestStatus applyForRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
-        if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
+    public ReservationRequestStatus applyForRoom(@RequestBody Room r) {
+        People people = DormRoomsUserDetailsService.getCurrentUser();
+        Optional<Room> room = RoomModel.getInstance().getDatabaseEntity(r);
+        if (room.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
-        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
-        if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
-
-        return ReservationModel.getInstance().applyForRoom(p.get(), r.get());
+        return ReservationModel.getInstance().applyForRoom(people, room.get());
     }
 
     @PostMapping("/reservation/leaveRoom")
-    public ReservationRequestStatus leaveRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
-        if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
-
-        return ReservationModel.getInstance().leaveRoom(p.get());
+    public ReservationRequestStatus leaveRoom() {
+        return ReservationModel.getInstance().leaveRoom(DormRoomsUserDetailsService.getCurrentUser());
     }
 
     @PostMapping("/reservation/changeRoom")
-    public ReservationRequestStatus changeRoom(@RequestBody ReservationData rd) {
-        Optional<People> p = PeopleModel.getInstance().getDatabaseEntity(rd.getPeople());
-        if (p.isEmpty()) return ReservationRequestStatus.PEOPLE_ID_INVALID;
+    public ReservationRequestStatus changeRoom(@RequestBody Room r) {
+        People people = DormRoomsUserDetailsService.getCurrentUser();
+        Optional<Room> room = RoomModel.getInstance().getDatabaseEntity(r);
+        if (room.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
-        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
-        if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
-
-        return ReservationModel.getInstance().changeRoom(p.get(), r.get());
+        return ReservationModel.getInstance().changeRoom(people, room.get());
     }
 
     @PostMapping("/reservation/assignToRoom")
@@ -54,21 +47,14 @@ public class ReservationController {
         Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
         if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
-        //TODO: security
         return ReservationModel.getInstance().assignToRoom(p.get(), r.get());
     }
 
     @PostMapping("/reservation/clearRoom")
-    public ReservationRequestStatus clearRoom(@RequestBody ReservationData rd) {
-        Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rd.getRoom());
-        if (r.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
+    public ReservationRequestStatus clearRoom(@RequestBody Room r) {
+        Optional<Room> room = RoomModel.getInstance().getDatabaseEntity(r);
+        if (room.isEmpty()) return ReservationRequestStatus.ROOM_ID_INVALID;
 
-        //TODO: security
-        return ReservationModel.getInstance().clearRoom(r.get());
+        return ReservationModel.getInstance().clearRoom(room.get());
     }
-
-    //TODO: please somebody figure out how in the holy old fuck does the spring security extension works
-    // it looks like a clusterfuck of builder patterns :'(
-
-    //TODO: assignToRoom and clearRoom is for the admin, they must be protected from normal users
 }

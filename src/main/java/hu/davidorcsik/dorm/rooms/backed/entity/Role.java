@@ -19,7 +19,7 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Role implements GrantedAuthority {
 
-    private enum Type {
+    public enum Type {
         RESIDENT, ADMIN
     }
 
