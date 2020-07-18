@@ -2,7 +2,9 @@ package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import lombok.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,10 +28,12 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ReadOnlyProperty
+    @JsonView(ResponseView.AdminView.class)
     private long id;
 
     @Enumerated(value = EnumType.ORDINAL)
     @ReadOnlyProperty
+    @JsonView(ResponseView.AdminView.class)
     private Type role;
 
     @OneToMany(mappedBy = "role")

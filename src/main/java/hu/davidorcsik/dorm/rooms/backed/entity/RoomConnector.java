@@ -1,7 +1,9 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import lombok.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
@@ -17,18 +19,21 @@ import javax.persistence.*;
 public class RoomConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(ResponseView.PublicView.class)
     private long id;
 
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "people_id", referencedColumnName = "id")
     @ToString.Exclude
     @ReadOnlyProperty
+    @JsonView(ResponseView.PublicView.class)
     private People people;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     @ToString.Exclude
     @ReadOnlyProperty
+    @JsonView(ResponseView.PublicView.class)
     private Room room;
 
     public RoomConnector(People people, Room room) {
