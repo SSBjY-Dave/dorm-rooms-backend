@@ -1,7 +1,9 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.LabelRequestStatus;
 import lombok.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
@@ -38,10 +40,13 @@ public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ReadOnlyProperty
+    @JsonView(ResponseView.AdminView.class)
     private long id;
+    @JsonView(ResponseView.AdminView.class)
     private String name;
     @OneToMany(mappedBy = "label")
     @ToString.Exclude
+    @JsonView(ResponseView.AdminView.class)
     private List<LabelConnector> labelConnectors;
 
     public long getId() {

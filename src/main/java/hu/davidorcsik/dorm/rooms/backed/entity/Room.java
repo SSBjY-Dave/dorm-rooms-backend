@@ -1,7 +1,9 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
@@ -44,19 +46,26 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ReadOnlyProperty
+    @JsonView(ResponseView.PublicView.class)
     private long id;
     @ReadOnlyProperty
+    @JsonView(ResponseView.PublicView.class)
     private int level;
     @ReadOnlyProperty
+    @JsonView(ResponseView.PublicView.class)
     private int roomNumber;
+    @JsonView(ResponseView.PublicView.class)
     private boolean locked;
     @ReadOnlyProperty
+    @JsonView(ResponseView.PublicView.class)
     private int capacity;
     @Enumerated(value = EnumType.ORDINAL)
+    @JsonView(ResponseView.PublicView.class)
     private Sex sex;
     @OneToMany(mappedBy = "room")
     @ReadOnlyProperty
     @ToString.Exclude
+    @JsonView(ResponseView.PublicView.class)
     private List<RoomConnector> roomConnectors;
 
     public long getId() {

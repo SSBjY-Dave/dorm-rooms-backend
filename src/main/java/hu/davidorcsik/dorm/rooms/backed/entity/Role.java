@@ -1,56 +1,56 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import lombok.*;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@Table(name = "label_connector")
+@Table(name = "roles")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class LabelConnector {
+public class Role implements GrantedAuthority {
+
+    public enum Type {
+        RESIDENT, ADMIN
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ReadOnlyProperty
     @JsonView(ResponseView.AdminView.class)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "people_id", referencedColumnName = "id")
-    @ToString.Exclude
+    @Enumerated(value = EnumType.ORDINAL)
     @ReadOnlyProperty
     @JsonView(ResponseView.AdminView.class)
-    private People people;
+    private Type role;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "label_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "role")
     @ToString.Exclude
-    @ReadOnlyProperty
-    @JsonView(ResponseView.AdminView.class)
-    private Label label;
-
-    public LabelConnector(People people, Label label) {
-        this.people = people;
-        this.label = label;
-    }
+    @JsonIgnore
+    private List<RoleConnector> roleConnectors;
 
     public long getId() {
         return id;
     }
 
-    public People getPeople() {
-        return people;
+    public Type getRole() {
+        return role;
     }
 
-    public Label getLabel() {
-        return label;
+    @Override
+    public String getAuthority() {
+        return role.name();
     }
 }

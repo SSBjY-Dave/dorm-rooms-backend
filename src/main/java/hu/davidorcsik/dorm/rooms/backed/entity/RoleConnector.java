@@ -11,12 +11,12 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@Table(name = "label_connector")
+@Table(name = "role_connector")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class LabelConnector {
+public class RoleConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ReadOnlyProperty
@@ -31,15 +31,15 @@ public class LabelConnector {
     private People people;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "label_id", referencedColumnName = "id")
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ToString.Exclude
     @ReadOnlyProperty
     @JsonView(ResponseView.AdminView.class)
-    private Label label;
+    private Role role;
 
-    public LabelConnector(People people, Label label) {
+    public RoleConnector(People people, Role role) {
         this.people = people;
-        this.label = label;
+        this.role = role;
     }
 
     public long getId() {
@@ -50,7 +50,7 @@ public class LabelConnector {
         return people;
     }
 
-    public Label getLabel() {
-        return label;
+    public Role getRole() {
+        return role;
     }
 }

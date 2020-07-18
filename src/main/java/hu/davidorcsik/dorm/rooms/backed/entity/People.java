@@ -1,7 +1,9 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
@@ -9,7 +11,6 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -53,26 +54,41 @@ public class People {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ReadOnlyProperty
+    @JsonView(ResponseView.AdminView.class)
     private long id;
+    @JsonView(ResponseView.PublicView.class)
     private String name;
+    @JsonView(ResponseView.AdminView.class)
     private String neptunId;
+    @JsonView(ResponseView.AdminView.class)
     private String email;
+    @JsonView(ResponseView.PublicView.class)
     private boolean newbie;
+    @JsonView(ResponseView.InternalView.class)
     private String token;
 
     @Enumerated(EnumType.ORDINAL)
+    @JsonView(ResponseView.PublicView.class)
     private Sex sex;
 
     @OneToMany(mappedBy = "people")
     @ReadOnlyProperty
     @ToString.Exclude
+    @JsonView(ResponseView.AdminView.class)
     private List<LabelConnector> labelConnectors;
 
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "id", referencedColumnName = "people_id")
     @ReadOnlyProperty
     @ToString.Exclude
+    @JsonView(ResponseView.PublicView.class)
     private RoomConnector roomConnector;
+
+    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ReadOnlyProperty
+    @ToString.Exclude
+    @JsonView(ResponseView.AdminView.class)
+    private List<RoleConnector> roleConnector;
 
     public long getId() {
         return id;
@@ -124,5 +140,17 @@ public class People {
 
     public void setSex(Sex sex) {
         this.sex = sex;
+    }
+
+    public List<LabelConnector> getLabelConnectors() {
+        return labelConnectors;
+    }
+
+    public RoomConnector getRoomConnector() {
+        return roomConnector;
+    }
+
+    public List<RoleConnector> getRoleConnector() {
+        return roleConnector;
     }
 }
