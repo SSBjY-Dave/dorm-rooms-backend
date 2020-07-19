@@ -3,6 +3,7 @@ package hu.davidorcsik.dorm.rooms.backed.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
+import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +35,11 @@ public class PeopleController {
     @JsonView(ResponseView.AdminView.class)
     public People[] getAllAdmin() {
         return PeopleModel.getInstance().getAll().toArray(new People[0]);
+    }
+
+    @GetMapping("/people/getCurrentPerson")
+    @JsonView(ResponseView.OwnerView.class)
+    public People getCurrentPerson() {
+        return DormRoomsUserDetailsService.getCurrentUser();
     }
 }

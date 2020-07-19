@@ -6,6 +6,7 @@ import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
 import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.RoomModificationData;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +35,10 @@ public class RoomController {
             room = r.get();
         }
         return RoomModel.getInstance().setAllowedSex(room, rmd.getSex());
+    }
+
+    @GetMapping("/room/getAll")
+    public Room[] getAll() {
+        return RoomModel.getInstance().getAll().toArray(new Room[0]);
     }
 }

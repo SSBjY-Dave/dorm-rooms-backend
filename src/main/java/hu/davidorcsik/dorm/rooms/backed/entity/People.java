@@ -58,9 +58,9 @@ public class People {
     private long id;
     @JsonView(ResponseView.PublicView.class)
     private String name;
-    @JsonView(ResponseView.AdminView.class)
+    @JsonView(ResponseView.OwnerView.class)
     private String neptunId;
-    @JsonView(ResponseView.AdminView.class)
+    @JsonView(ResponseView.OwnerView.class)
     private String email;
     @JsonView(ResponseView.PublicView.class)
     private boolean newbie;

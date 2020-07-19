@@ -1,6 +1,7 @@
 package hu.davidorcsik.dorm.rooms.backed.model;
 
 import hu.davidorcsik.dorm.rooms.backed.database.RoomRepo;
+import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
@@ -41,5 +42,11 @@ public class RoomModel {
         r.setSex(sex);
         roomRepo.save(r);
         return RoomRequestStatus.OK;
+    }
+
+    public ArrayList<Room> getAll() {
+        ArrayList<Room> rooms = new ArrayList<>();
+        roomRepo.findAll().forEach(rooms::add);
+        return rooms;
     }
 }
