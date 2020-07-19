@@ -1,18 +1,22 @@
 package hu.davidorcsik.dorm.rooms.backed.controller;
 
+import hu.davidorcsik.dorm.rooms.backed.DormRoomsBackendApplication;
 import hu.davidorcsik.dorm.rooms.backed.entity.Label;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.model.LabelAssociationModel;
 import hu.davidorcsik.dorm.rooms.backed.model.LabelModel;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
+import hu.davidorcsik.dorm.rooms.backed.security.SecurityConfigurationAdapter;
 import hu.davidorcsik.dorm.rooms.backed.status.LabelAssociationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.LabelAssociationData;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class LabelAssociationController {
     @PostMapping("/labelAssociation/disassociate")
     public LabelAssociationRequestStatus disassociate(LabelAssociationData lad) {

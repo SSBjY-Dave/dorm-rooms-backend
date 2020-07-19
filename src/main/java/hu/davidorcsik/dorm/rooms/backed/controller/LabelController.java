@@ -3,12 +3,10 @@ package hu.davidorcsik.dorm.rooms.backed.controller;
 import hu.davidorcsik.dorm.rooms.backed.entity.Label;
 import hu.davidorcsik.dorm.rooms.backed.model.LabelModel;
 import hu.davidorcsik.dorm.rooms.backed.status.LabelRequestStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class LabelController {
     @PostMapping("/label/add")
     public LabelRequestStatus[] add(@RequestBody Label l) {

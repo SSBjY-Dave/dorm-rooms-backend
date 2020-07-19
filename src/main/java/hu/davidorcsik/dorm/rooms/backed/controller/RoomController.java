@@ -6,14 +6,12 @@ import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
 import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.RoomModificationData;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class RoomController {
     @PostMapping("/room/setLockState")
     public RoomRequestStatus setLockState(@RequestBody RoomModificationData rmd) {

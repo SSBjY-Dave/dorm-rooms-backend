@@ -8,6 +8,7 @@ import hu.davidorcsik.dorm.rooms.backed.types.ReservationData;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import javax.annotation.security.RolesAllowed;
 
 //TODO: this controller must not be part of the release build
 @RestController
+@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class MainController {
     @RequestMapping("/")
     public String home() {

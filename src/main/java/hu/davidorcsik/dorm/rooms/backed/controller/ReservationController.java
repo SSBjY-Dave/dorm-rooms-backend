@@ -8,6 +8,7 @@ import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
 import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.ReservationData;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class ReservationController {
     @PostMapping("/reservation/applyForRoom")
     public ReservationRequestStatus applyForRoom(@RequestBody Room r) {

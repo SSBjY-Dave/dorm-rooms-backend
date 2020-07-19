@@ -9,6 +9,7 @@ import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class PeopleController {
     @PostMapping("/people/add")
     public PeopleRequestStatus[] add(@RequestBody People p) {
