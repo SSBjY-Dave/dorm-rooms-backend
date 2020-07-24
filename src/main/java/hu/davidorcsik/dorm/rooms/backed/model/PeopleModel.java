@@ -39,7 +39,7 @@ public class PeopleModel {
 
         if (peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_ALREADY_EXISTS);
         if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
-        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXSITS);
+        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
         if (peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
 
@@ -71,7 +71,7 @@ public class PeopleModel {
         if (!peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_INVALID);
 
         if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
-        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXSITS);
+        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
         if (peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
 
