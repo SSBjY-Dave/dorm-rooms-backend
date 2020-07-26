@@ -4,12 +4,10 @@ import hu.davidorcsik.dorm.rooms.backed.database.RoleConnectorRepo;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.entity.Role;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
-import hu.davidorcsik.dorm.rooms.backed.status.RoleAssiciationRequestStatus;
+import hu.davidorcsik.dorm.rooms.backed.status.RoleAssociationRequestStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,19 +27,19 @@ public class RoleAssociationModel {
         instance = this;
     }
 
-    public RoleAssiciationRequestStatus associate(People people, Role role) {
+    public RoleAssociationRequestStatus associate(People people, Role role) {
         Optional<RoleConnector> rc = roleConnectorRepo.findByPeopleAndRole(people, role);
-        if (rc.isPresent()) return RoleAssiciationRequestStatus.ROLE_ALREADY_ASSOCIATED;
+        if (rc.isPresent()) return RoleAssociationRequestStatus.ROLE_ALREADY_ASSOCIATED;
 
         roleConnectorRepo.save(new RoleConnector(people, role));
-        return RoleAssiciationRequestStatus.OK;
+        return RoleAssociationRequestStatus.OK;
     }
 
-    public RoleAssiciationRequestStatus disassociate(People people, Role role) {
+    public RoleAssociationRequestStatus disassociate(People people, Role role) {
         Optional<RoleConnector> rc = roleConnectorRepo.findByPeopleAndRole(people, role);
-        if (rc.isEmpty()) return RoleAssiciationRequestStatus.ROLE_NOT_ASSOCIATED;
+        if (rc.isEmpty()) return RoleAssociationRequestStatus.ROLE_NOT_ASSOCIATED;
 
         roleConnectorRepo.delete(rc.get());
-        return RoleAssiciationRequestStatus.OK;
+        return RoleAssociationRequestStatus.OK;
     }
 }
