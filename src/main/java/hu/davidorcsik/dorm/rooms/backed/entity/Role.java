@@ -33,7 +33,7 @@ public class Role implements GrantedAuthority {
 
     @Enumerated(value = EnumType.ORDINAL)
     @ReadOnlyProperty
-    @JsonView(ResponseView.AdminView.class)
+    @JsonView(ResponseView.OwnerView.class)
     private Type role;
 
     @OneToMany(mappedBy = "role")

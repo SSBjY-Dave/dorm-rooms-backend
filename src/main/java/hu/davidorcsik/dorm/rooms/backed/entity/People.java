@@ -87,7 +87,7 @@ public class People {
     @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ReadOnlyProperty
     @ToString.Exclude
-    @JsonView(ResponseView.AdminView.class)
+    @JsonView(ResponseView.OwnerView.class)
     private List<RoleConnector> roleConnector;
 
     public long getId() {

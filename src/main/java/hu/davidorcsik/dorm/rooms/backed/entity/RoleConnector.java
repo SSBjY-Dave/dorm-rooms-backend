@@ -34,7 +34,7 @@ public class RoleConnector {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ToString.Exclude
     @ReadOnlyProperty
-    @JsonView(ResponseView.AdminView.class)
+    @JsonView(ResponseView.OwnerView.class)
     private Role role;
 
     public RoleConnector(People people, Role role) {
