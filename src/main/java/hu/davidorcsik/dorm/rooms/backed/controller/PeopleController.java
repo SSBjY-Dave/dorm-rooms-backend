@@ -8,6 +8,9 @@ import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Objects;
+
 @RestController
 @CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class PeopleController {
@@ -29,13 +32,23 @@ public class PeopleController {
     @GetMapping("/people/getAll")
     @JsonView(ResponseView.PublicView.class)
     public People[] getAll() {
-        return PeopleModel.getInstance().getAll().toArray(new People[0]);
+        //TODO: Figure out how to skip room connectors in one way because I can't anymore.......
+        List<People> people = PeopleModel.getInstance().getAll();
+        for (People p : people) {
+            if (p.getRoomConnector() != null) p.getRoomConnector().getRoom().removeRoomConnectors();
+        };
+        return people.toArray(new People[0]);
     }
 
     @GetMapping("/people/getAll/admin")
     @JsonView(ResponseView.AdminView.class)
-    public People[] getAllAdmin() {
-        return PeopleModel.getInstance().getAll().toArray(new People[0]);
+    public People[] getAllAdmin(){
+        //TODO: Figure out how to skip room connectors in one way because I can't anymore.......
+        List<People> people = PeopleModel.getInstance().getAll();
+        for (People p : people) {
+            if (p.getRoomConnector() != null) p.getRoomConnector().getRoom().removeRoomConnectors();
+        };
+        return people.toArray(new People[0]);
     }
 
     @GetMapping("/people/getCurrentPerson")

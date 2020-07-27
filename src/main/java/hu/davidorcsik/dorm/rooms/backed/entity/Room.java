@@ -103,4 +103,8 @@ public class Room {
     public boolean isOverfilled() {
         return roomConnectors.size() > capacity;
     }
+
+    public void removeRoomConnectors() {
+        roomConnectors = null;
+    }
 }
