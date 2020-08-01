@@ -68,14 +68,23 @@ public class PeopleModel {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
 
-        if (!peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_INVALID);
+        People databaseEntity = peopleRepo.findById(p.getId()).orElse(null);
 
-        if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
-        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
-        if (peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
+        if (databaseEntity == null) {
+            status.add(PeopleRequestStatus.ID_INVALID);
+            return status;
+        }
+
+        if (!databaseEntity.getNeptunId().equals(p.getNeptunId()) && peopleRepo.existsByNeptunId(p.getNeptunId()))
+            status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
+        if (!databaseEntity.getEmail().equals(p.getEmail()) && peopleRepo.existsByEmail(p.getEmail()))
+            status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
+        //TODO: token generation should be moved to a different method
+        if (!databaseEntity.getToken().equals(p.getToken()) && peopleRepo.existsByToken(p.getToken()))
+            status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
 
-        peopleRepo.save(p); //TODO: more security or something
+        peopleRepo.save(p);
         status.add(PeopleRequestStatus.OK);
         return status;
     }

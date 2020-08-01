@@ -39,6 +39,4 @@ public class LabelAssociationController {
 
         return LabelAssociationModel.getInstance().assign(p.get(), l.get());
     }
-
-    //TODO: all mapping in this controller is for the admin, they must be protected from normal users
 }
