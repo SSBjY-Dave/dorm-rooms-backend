@@ -36,6 +36,7 @@ public class PeopleModel {
     public ArrayList<PeopleRequestStatus> add(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
+        p.setNeptunId(p.getNeptunId().toLowerCase());
 
         if (peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_ALREADY_EXISTS);
         if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
@@ -67,6 +68,7 @@ public class PeopleModel {
     public ArrayList<PeopleRequestStatus> modify(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
+        p.setNeptunId(p.getNeptunId().toLowerCase());
 
         People databaseEntity = peopleRepo.findById(p.getId()).orElse(null);
 
