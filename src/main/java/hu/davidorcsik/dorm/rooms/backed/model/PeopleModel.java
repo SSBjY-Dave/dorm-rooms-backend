@@ -81,10 +81,12 @@ public class PeopleModel {
             status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
         if (!databaseEntity.getEmail().equals(p.getEmail()) && peopleRepo.existsByEmail(p.getEmail()))
             status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
-        //TODO: token generation should be moved to a different method
-        if (!databaseEntity.getToken().equals(p.getToken()) && peopleRepo.existsByToken(p.getToken()))
-            status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
+
+        p.setToken(databaseEntity.getToken());
+        p.setRoomConnector(databaseEntity.getRoomConnector());
+        p.setRoleConnector(databaseEntity.getRoleConnectors());
+        p.setLabelConnectors(databaseEntity.getLabelConnectors());
 
         peopleRepo.save(p);
         status.add(PeopleRequestStatus.OK);

@@ -2,6 +2,7 @@ package hu.davidorcsik.dorm.rooms.backed.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
+import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
 import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
@@ -9,7 +10,6 @@ import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin("http://localhost:4200") //TODO: Modify for production server
@@ -34,9 +34,7 @@ public class PeopleController {
     public People[] getAll() {
         //TODO: Figure out how to skip room connectors in one way because I can't anymore.......
         List<People> people = PeopleModel.getInstance().getAll();
-        for (People p : people) {
-            if (p.getRoomConnector() != null) p.getRoomConnector().getRoom().removeRoomConnectors();
-        };
+        people.forEach(People::prepareSerialization);
         return people.toArray(new People[0]);
     }
 
@@ -45,9 +43,7 @@ public class PeopleController {
     public People[] getAllAdmin(){
         //TODO: Figure out how to skip room connectors in one way because I can't anymore.......
         List<People> people = PeopleModel.getInstance().getAll();
-        for (People p : people) {
-            if (p.getRoomConnector() != null) p.getRoomConnector().getRoom().removeRoomConnectors();
-        };
+        people.forEach(People::prepareSerialization);
         return people.toArray(new People[0]);
     }
 

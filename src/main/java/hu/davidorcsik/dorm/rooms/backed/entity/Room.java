@@ -62,7 +62,7 @@ public class Room {
     @Enumerated(value = EnumType.ORDINAL)
     @JsonView(ResponseView.PublicView.class)
     private Sex sex;
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.DETACH)
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonView(ResponseView.PublicView.class)
@@ -104,7 +104,15 @@ public class Room {
         return roomConnectors.size() > capacity;
     }
 
-    public void removeRoomConnectors() {
+    public List<RoomConnector> getRoomConnectors() {
+        return roomConnectors;
+    }
+
+    public void prepareSerialization() {
+        roomConnectors.forEach(RoomConnector::prepareSerializationFromRoom);
+    }
+
+    void prepareSerializationFromRoomConnector() {
         roomConnectors = null;
     }
 }

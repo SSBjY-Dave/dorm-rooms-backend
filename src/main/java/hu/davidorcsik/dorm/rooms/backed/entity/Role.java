@@ -18,9 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "roles")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Role implements GrantedAuthority {
-
     public enum Type {
         RESIDENT, ADMIN
     }
@@ -36,7 +35,7 @@ public class Role implements GrantedAuthority {
     @JsonView(ResponseView.OwnerView.class)
     private Type role;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.DETACH)
     @ToString.Exclude
     @JsonIgnore
     private List<RoleConnector> roleConnectors;
@@ -52,5 +51,13 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return role.name();
+    }
+
+    public void prepareSerialization() {
+        roleConnectors.forEach(RoleConnector::prepareSerializationFromRole);
+    }
+
+    void prepareSerializationFromRoleConnector() {
+        roleConnectors = null;
     }
 }

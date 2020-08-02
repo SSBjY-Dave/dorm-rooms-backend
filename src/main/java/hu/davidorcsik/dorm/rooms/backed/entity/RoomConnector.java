@@ -48,4 +48,23 @@ public class RoomConnector {
     public Room getRoom() {
         return room;
     }
+
+    public void removeRoom() {
+        room = null;
+    }
+
+    public void prepareSerialization() {
+        people.prepareSerializationFromRoomConnector();
+        room.prepareSerializationFromRoomConnector();
+    }
+
+    void prepareSerializationFromPeople() {
+        people = null;
+        room.prepareSerializationFromRoomConnector();
+    }
+
+    void prepareSerializationFromRoom() {
+        room = null;
+        people.prepareSerializationFromRoomConnector();
+    }
 }

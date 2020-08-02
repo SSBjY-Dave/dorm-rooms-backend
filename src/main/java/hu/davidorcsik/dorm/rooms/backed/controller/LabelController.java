@@ -5,6 +5,8 @@ import hu.davidorcsik.dorm.rooms.backed.model.LabelModel;
 import hu.davidorcsik.dorm.rooms.backed.status.LabelRequestStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("http://localhost:4200") //TODO: Modify for production server
 public class LabelController {
@@ -25,6 +27,8 @@ public class LabelController {
 
     @GetMapping("/label/getAll")
     public Label[] getAll() {
-        return LabelModel.getInstance().getAll().toArray(new Label[0]);
+        List<Label> labels = LabelModel.getInstance().getAll();
+        labels.forEach(Label::prepareSerialization);
+        return labels.toArray(new Label[0]);
     }
 }

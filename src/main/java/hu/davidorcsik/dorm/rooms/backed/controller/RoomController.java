@@ -1,13 +1,13 @@
 package hu.davidorcsik.dorm.rooms.backed.controller;
 
-import hu.davidorcsik.dorm.rooms.backed.entity.People;
-import hu.davidorcsik.dorm.rooms.backed.entity.Room;
+import hu.davidorcsik.dorm.rooms.backed.entity.*;
 import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
 import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.status.RoomRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.RoomModificationData;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -37,6 +37,8 @@ public class RoomController {
 
     @GetMapping("/room/getAll")
     public Room[] getAll() {
-        return RoomModel.getInstance().getAll().toArray(new Room[0]);
+        List<Room> rooms = RoomModel.getInstance().getAll();
+        rooms.forEach(Room::prepareSerialization);
+        return rooms.toArray(new Room[0]);
     }
 }

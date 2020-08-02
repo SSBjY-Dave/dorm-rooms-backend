@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "role_connector")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RoleConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +52,20 @@ public class RoleConnector {
 
     public Role getRole() {
         return role;
+    }
+
+    public void prepareSerialization() {
+        people.prepareSerializationFromRoleConnector();
+        role.prepareSerializationFromRoleConnector();
+    }
+
+    void prepareSerializationFromPeople() {
+        people = null;
+        role.prepareSerializationFromRoleConnector();
+    }
+
+    void prepareSerializationFromRole() {
+        role = null;
+        people.prepareSerializationFromRoleConnector();
     }
 }
