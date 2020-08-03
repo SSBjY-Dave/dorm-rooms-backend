@@ -38,32 +38,7 @@ public class MainController {
         public byte[] getBytes() { return (byte[]) ArrayUtils.toPrimitive(bytes.toArray(new Byte[0])); }
     }
     @GetMapping("/test")
-    public ResponseEntity test() throws IOException {
-        Workbook workbook = new XSSFWorkbook();
-        Sheet personSheet = workbook.createSheet("People");
-        Row headerRow = personSheet.createRow(0);
-
-        Cell cellHeaderName     =   headerRow.createCell(0);
-        Cell cellHeaderNeptun   =   headerRow.createCell(1);
-        Cell cellHeaderEmail    =   headerRow.createCell(2);
-        Cell cellHeaderNewbie   =   headerRow.createCell(3);
-        Cell cellHeaderSex      =   headerRow.createCell(4);
-        Cell cellHeaderRoom     =   headerRow.createCell(5);
-        Cell cellHeaderLabels   =   headerRow.createCell(6);
-
-        cellHeaderName.setCellValue("Name");
-        cellHeaderNeptun.setCellValue("Neptun");
-        cellHeaderEmail.setCellValue("Email");
-        cellHeaderNewbie.setCellValue("Newbie");
-        cellHeaderSex.setCellValue("Sex");
-        cellHeaderRoom.setCellValue("Room");
-        cellHeaderLabels.setCellValue("Labels");
-
-        ByteCollectorOutputStream os = new ByteCollectorOutputStream();
-        workbook.write(os);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.xlsx")
-                .body(os.getBytes());
+    public String test() {
+        return "testkek meg ilyenenk";
     }
 }
