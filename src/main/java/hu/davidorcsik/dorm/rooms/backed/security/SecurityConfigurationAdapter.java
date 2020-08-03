@@ -50,6 +50,7 @@ public class SecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers("/reservation/assignToRoom").hasAuthority("ADMIN")
                 .antMatchers("/reservation/clearRoom").hasAuthority("ADMIN")
                 .antMatchers("/room/setLockState").hasAuthority("ADMIN")
+                .antMatchers("/utility/export").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
