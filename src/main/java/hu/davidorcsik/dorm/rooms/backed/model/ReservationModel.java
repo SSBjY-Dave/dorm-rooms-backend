@@ -7,6 +7,7 @@ import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoomConnector;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
+import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class ReservationModel {
 
     public ReservationRequestStatus applyForRoom(People people, Room room) {
         if (room.isLocked()) return ReservationRequestStatus.ROOM_IS_LOCKED;
-        if (!people.getSex().equals(room.getSex())) return ReservationRequestStatus.SEX_INVALID;
+        if (room.getSex() != Sex.ANY && !people.getSex().equals(room.getSex())) return ReservationRequestStatus.SEX_INVALID;
         return assignToRoom(people, room);
     }
 
@@ -69,8 +70,6 @@ public class ReservationModel {
 
     public ReservationRequestStatus assignToRoom(People people, Room room) {
         if (!peopleRepo.existsById(people.getId())) return ReservationRequestStatus.PEOPLE_ID_INVALID;
-        Optional<RoomConnector> rc = roomConnectorRepo.findByPeople(people);
-        if (rc.isPresent()) return ReservationRequestStatus.RESERVATION_ALREADY_EXISTS;
 
         if (!roomRepo.existsById(room.getId())) return ReservationRequestStatus.ROOM_ID_INVALID;
         if (room.isFull()) return ReservationRequestStatus.ROOM_ALREADY_FULL;
@@ -88,6 +87,10 @@ public class ReservationModel {
     protected void addReservation(RoomConnector reservation) {
         Room r = roomRepo.findById(reservation.getRoom().getId()).get();
         if (r.isOverfilled()) throw new IllegalStateException("Data race lost");
+
+        People p = peopleRepo.findById(reservation.getPeople().getId()).get();
+        if (p.getRoomConnector() != null) leaveRoom(p);
+
         roomConnectorRepo.save(reservation);
         //TODO: this synchronization should be avoided and the database engine should take care of it.
         // we should find a way to do it in spring but for now it'll do. however it can be very slow if there a lot of

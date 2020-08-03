@@ -76,8 +76,7 @@ public class People {
     @JsonView(ResponseView.AdminView.class)
     private List<LabelConnector> labelConnectors;
 
-    @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "id", referencedColumnName = "people_id")
+    @OneToOne(mappedBy = "people", cascade = CascadeType.DETACH)
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonView(ResponseView.PublicView.class)
