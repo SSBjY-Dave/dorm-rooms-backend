@@ -53,4 +53,19 @@ public class LabelConnector {
     public Label getLabel() {
         return label;
     }
+
+    public void prepareSerialization() {
+        people.prepareSerializationFromLabelConnector();
+        label.prepareSerializationFromLabelConnector();
+    }
+
+    void prepareSerializationFromPeople() {
+        people = null;
+        label.prepareSerializationFromLabelConnector();
+    }
+
+    void prepareSerializationFromLabel() {
+        label = null;
+        people.prepareSerializationFromLabelConnector();
+    }
 }

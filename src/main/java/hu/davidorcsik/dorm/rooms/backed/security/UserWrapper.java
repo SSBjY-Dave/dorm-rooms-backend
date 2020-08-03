@@ -25,7 +25,7 @@ public class UserWrapper implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<Role> grantedRoles = new ArrayList<>();
-        people.getRoleConnector().forEach(rc -> grantedRoles.add(rc.getRole()));
+        people.getRoleConnectors().forEach(rc -> grantedRoles.add(rc.getRole()));
         return grantedRoles;
     }
 

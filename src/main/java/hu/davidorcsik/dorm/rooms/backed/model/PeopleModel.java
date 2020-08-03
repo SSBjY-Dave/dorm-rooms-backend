@@ -36,10 +36,11 @@ public class PeopleModel {
     public ArrayList<PeopleRequestStatus> add(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
+        p.setNeptunId(p.getNeptunId().toLowerCase());
 
         if (peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_ALREADY_EXISTS);
         if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
-        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXSITS);
+        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
         if (peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
 
@@ -67,15 +68,27 @@ public class PeopleModel {
     public ArrayList<PeopleRequestStatus> modify(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
+        p.setNeptunId(p.getNeptunId().toLowerCase());
 
-        if (!peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_INVALID);
+        People databaseEntity = peopleRepo.findById(p.getId()).orElse(null);
 
-        if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
-        if (peopleRepo.existsByEmail(p.getEmail())) status.add(PeopleRequestStatus.EMAIL_ALREADY_EXSITS);
-        if (peopleRepo.existsByToken(p.getToken())) status.add(PeopleRequestStatus.TOKEN_ALREADY_EXISTS);
+        if (databaseEntity == null) {
+            status.add(PeopleRequestStatus.ID_INVALID);
+            return status;
+        }
+
+        if (!databaseEntity.getNeptunId().equals(p.getNeptunId()) && peopleRepo.existsByNeptunId(p.getNeptunId()))
+            status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
+        if (!databaseEntity.getEmail().equals(p.getEmail()) && peopleRepo.existsByEmail(p.getEmail()))
+            status.add(PeopleRequestStatus.EMAIL_ALREADY_EXITS);
         if (!status.isEmpty()) return status;
 
-        peopleRepo.save(p); //TODO: more security or something
+        p.setToken(databaseEntity.getToken());
+        p.setRoomConnector(databaseEntity.getRoomConnector());
+        p.setRoleConnector(databaseEntity.getRoleConnectors());
+        p.setLabelConnectors(databaseEntity.getLabelConnectors());
+
+        peopleRepo.save(p);
         status.add(PeopleRequestStatus.OK);
         return status;
     }

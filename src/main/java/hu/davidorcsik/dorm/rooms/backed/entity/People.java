@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "people")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class People {
     private static Pattern neptunIdPattern = Pattern.compile("^[a-z0-9]{6}$");
     private static Pattern emailPattern = Pattern.compile("^([A-z0-9\\.\\-\\_]+)@([a-z0-9\\.\\-\\_]+)\\.([a-z]{2,})$");
@@ -71,7 +70,7 @@ public class People {
     @JsonView(ResponseView.PublicView.class)
     private Sex sex;
 
-    @OneToMany(mappedBy = "people")
+    @OneToMany(mappedBy = "people", cascade = CascadeType.DETACH)
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonView(ResponseView.AdminView.class)
@@ -84,11 +83,11 @@ public class People {
     @JsonView(ResponseView.PublicView.class)
     private RoomConnector roomConnector;
 
-    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @ReadOnlyProperty
     @ToString.Exclude
-    @JsonView(ResponseView.AdminView.class)
-    private List<RoleConnector> roleConnector;
+    @JsonView(ResponseView.OwnerView.class)
+    private List<RoleConnector> roleConnectors;
 
     public long getId() {
         return id;
@@ -146,11 +145,47 @@ public class People {
         return labelConnectors;
     }
 
+    public void setLabelConnectors(List<LabelConnector> labelConnectors) {
+        this.labelConnectors = labelConnectors;
+    }
+
     public RoomConnector getRoomConnector() {
         return roomConnector;
     }
 
-    public List<RoleConnector> getRoleConnector() {
-        return roleConnector;
+    public void setRoomConnector(RoomConnector roomConnector) {
+        this.roomConnector = roomConnector;
+    }
+
+    public List<RoleConnector> getRoleConnectors() {
+        return roleConnectors;
+    }
+
+    public void setRoleConnector(List<RoleConnector> roleConnectors) {
+        this.roleConnectors = roleConnectors;
+    }
+
+    public void prepareSerialization() {
+        labelConnectors.forEach(LabelConnector::prepareSerializationFromPeople);
+        roomConnector.prepareSerializationFromPeople();
+        roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
+    }
+
+    void prepareSerializationFromLabelConnector() {
+        labelConnectors = null;
+        roomConnector.prepareSerializationFromPeople();
+        roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
+    }
+
+    void prepareSerializationFromRoomConnector() {
+        roomConnector = null;
+        roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
+        labelConnectors.forEach(LabelConnector::prepareSerializationFromPeople);
+    }
+
+    void prepareSerializationFromRoleConnector() {
+        roleConnectors = null;
+        roomConnector.prepareSerializationFromPeople();
+        labelConnectors.forEach(LabelConnector::prepareSerializationFromPeople);
     }
 }

@@ -44,7 +44,7 @@ public class Label {
     private long id;
     @JsonView(ResponseView.AdminView.class)
     private String name;
-    @OneToMany(mappedBy = "label")
+    @OneToMany(mappedBy = "label", cascade = CascadeType.DETACH)
     @ToString.Exclude
     @JsonView(ResponseView.AdminView.class)
     private List<LabelConnector> labelConnectors;
@@ -70,5 +70,17 @@ public class Label {
 
     public boolean addLabelConnector(LabelConnector lc) {
         return labelConnectors.add(lc);
+    }
+
+    public void setLabelConnectors(List<LabelConnector> labelConnectors) {
+        this.labelConnectors = labelConnectors;
+    }
+
+    public void prepareSerialization() {
+        labelConnectors.forEach(LabelConnector::prepareSerializationFromLabel);
+    }
+
+    void prepareSerializationFromLabelConnector() {
+        labelConnectors = null;
     }
 }

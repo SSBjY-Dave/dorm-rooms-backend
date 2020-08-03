@@ -60,9 +60,16 @@ public class LabelModel {
         ArrayList<LabelRequestStatus> status = new ArrayList<>(Label.isLabelValid(l));
         if (!status.isEmpty()) return status;
 
-        if (!labelRepo.existsById(l.getId())) status.add(LabelRequestStatus.ID_DOES_NOT_EXISTS);
+        Label databaseEntity = labelRepo.findById(l.getId()).orElse(null);
+        if (databaseEntity == null) {
+            status.add(LabelRequestStatus.ID_DOES_NOT_EXISTS);
+            return status;
+        }
+
         if (!labelRepo.existsByName(l.getName())) status.add(LabelRequestStatus.NAME_ALREADY_EXISTS);
         if (!status.isEmpty()) return status;
+
+        l.setLabelConnectors(databaseEntity.getLabelConnectors());
 
         labelRepo.save(l);
         status.add(LabelRequestStatus.OK);

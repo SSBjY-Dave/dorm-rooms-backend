@@ -2,11 +2,14 @@ package hu.davidorcsik.dorm.rooms.backed.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
+import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
 import hu.davidorcsik.dorm.rooms.backed.security.DormRoomsUserDetailsService;
 import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:4200") //TODO: Modify for production server
@@ -29,13 +32,19 @@ public class PeopleController {
     @GetMapping("/people/getAll")
     @JsonView(ResponseView.PublicView.class)
     public People[] getAll() {
-        return PeopleModel.getInstance().getAll().toArray(new People[0]);
+        //TODO: Figure out how to skip room connectors in one way because I can't anymore.......
+        List<People> people = PeopleModel.getInstance().getAll();
+        people.forEach(People::prepareSerialization);
+        return people.toArray(new People[0]);
     }
 
     @GetMapping("/people/getAll/admin")
     @JsonView(ResponseView.AdminView.class)
-    public People[] getAllAdmin() {
-        return PeopleModel.getInstance().getAll().toArray(new People[0]);
+    public People[] getAllAdmin(){
+        //TODO: Figure out how to skip room connectors in one way because I can't anymore.......
+        List<People> people = PeopleModel.getInstance().getAll();
+        people.forEach(People::prepareSerialization);
+        return people.toArray(new People[0]);
     }
 
     @GetMapping("/people/getCurrentPerson")
