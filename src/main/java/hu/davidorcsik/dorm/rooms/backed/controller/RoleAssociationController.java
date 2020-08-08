@@ -9,15 +9,16 @@ import hu.davidorcsik.dorm.rooms.backed.status.RoleAssociationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.RoleAssociationData;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
+@CrossOrigin(origins = { "http://localhost:4200", "http://89.134.96.61:4200"}) //TODO: Modify for production server
 public class RoleAssociationController {
     @PostMapping("/roleAssociation/associate")
-    public RoleAssociationRequestStatus associate(RoleAssociationData rad) {
+    public RoleAssociationRequestStatus associate(@RequestBody RoleAssociationData rad) {
         Optional<People> people = PeopleModel.getInstance().getDatabaseEntity(rad.getPeople());
         if (people.isEmpty()) return RoleAssociationRequestStatus.PEOPLE_INVALID;
 
@@ -28,7 +29,7 @@ public class RoleAssociationController {
     }
 
     @PostMapping("/roleAssociation/disassociate")
-    public RoleAssociationRequestStatus disassociate(RoleAssociationData rad) {
+    public RoleAssociationRequestStatus disassociate(@RequestBody RoleAssociationData rad) {
         Optional<People> people = PeopleModel.getInstance().getDatabaseEntity(rad.getPeople());
         if (people.isEmpty()) return RoleAssociationRequestStatus.PEOPLE_INVALID;
 

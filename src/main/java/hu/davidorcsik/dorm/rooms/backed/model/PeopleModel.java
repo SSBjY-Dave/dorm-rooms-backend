@@ -27,16 +27,20 @@ public class PeopleModel {
     }
 
     public Optional<People> getDatabaseEntity(People p) {
-        return peopleRepo.findById(p.getId());
+        Optional<People> dbEntity = peopleRepo.findById(p.getId());
+        dbEntity.ifPresent(people -> people.setNeptunId(people.getNeptunId().toUpperCase()));
+        return dbEntity;
     }
     public Optional<People> getDatabaseEntityByNeptunId(String neptunId) {
-        return peopleRepo.findByNeptunId(neptunId);
+        Optional<People> dbEntity = peopleRepo.findByNeptunId(neptunId.toUpperCase());
+        dbEntity.ifPresent(people -> people.setNeptunId(people.getNeptunId().toUpperCase()));
+        return dbEntity;
     }
 
     public ArrayList<PeopleRequestStatus> add(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
-        p.setNeptunId(p.getNeptunId().toLowerCase());
+        p.setNeptunId(p.getNeptunId().toUpperCase());
 
         if (peopleRepo.existsById(p.getId())) status.add(PeopleRequestStatus.ID_ALREADY_EXISTS);
         if (peopleRepo.existsByNeptunId(p.getNeptunId())) status.add(PeopleRequestStatus.NEPTUN_ID_ALREADY_EXISTS);
@@ -68,9 +72,9 @@ public class PeopleModel {
     public ArrayList<PeopleRequestStatus> modify(People p) {
         ArrayList<PeopleRequestStatus> status = People.isPeopleValid(p);
         if (!status.isEmpty()) return status;
-        p.setNeptunId(p.getNeptunId().toLowerCase());
+        p.setNeptunId(p.getNeptunId().toUpperCase());
 
-        People databaseEntity = peopleRepo.findById(p.getId()).orElse(null);
+        People databaseEntity = getDatabaseEntity(p).orElse(null);
 
         if (databaseEntity == null) {
             status.add(PeopleRequestStatus.ID_INVALID);

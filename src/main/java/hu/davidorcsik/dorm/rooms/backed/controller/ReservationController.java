@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
+@CrossOrigin(origins = { "http://localhost:4200", "http://89.134.96.61:4200"}) //TODO: Modify for production server
 public class ReservationController {
     @PostMapping("/reservation/applyForRoom")
     public ReservationRequestStatus applyForRoom(@RequestBody Room r) {

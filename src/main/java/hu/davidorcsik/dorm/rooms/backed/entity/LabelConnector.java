@@ -15,7 +15,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "label_connector")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class LabelConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

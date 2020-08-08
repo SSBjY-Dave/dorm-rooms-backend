@@ -21,11 +21,11 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 @Table(name = "people")
 public class People {
-    private static Pattern neptunIdPattern = Pattern.compile("^[a-z0-9]{6}$");
+    private static Pattern neptunIdPattern = Pattern.compile("^[A-Z0-9]{6}$");
     private static Pattern emailPattern = Pattern.compile("^([A-z0-9\\.\\-\\_]+)@([a-z0-9\\.\\-\\_]+)\\.([a-z]{2,})$");
 
     public static boolean isNeptunIdValid(String neptunId) {
-        neptunId = neptunId.toLowerCase();
+        neptunId = neptunId.toUpperCase();
         return neptunIdPattern.matcher(neptunId).matches();
     }
 

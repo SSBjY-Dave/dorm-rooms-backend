@@ -15,7 +15,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "room_connector")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RoomConnector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
