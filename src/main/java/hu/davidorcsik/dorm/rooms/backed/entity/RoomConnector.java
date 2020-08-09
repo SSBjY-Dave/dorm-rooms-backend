@@ -31,7 +31,6 @@ public class RoomConnector {
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     @ToString.Exclude
-    @ReadOnlyProperty
     @JsonView(ResponseView.PublicView.class)
     private Room room;
 
@@ -47,6 +46,8 @@ public class RoomConnector {
     public Room getRoom() {
         return room;
     }
+
+    public void setRoom(Room room) { this.room = room; }
 
     public void removeRoom() {
         room = null;

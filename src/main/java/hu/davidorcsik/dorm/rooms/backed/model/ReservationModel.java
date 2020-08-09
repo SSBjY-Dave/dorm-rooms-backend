@@ -8,6 +8,7 @@ import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoomConnector;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
+import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,11 +62,37 @@ public class ReservationModel {
         Optional<RoomConnector> rc = roomConnectorRepo.findByPeople(people);
         if (rc.isEmpty()) return ReservationRequestStatus.RESERVATION_NOT_FOUND;
 
-        ReservationRequestStatus status = assignToRoom(people, room);
-        if (!status.equals(ReservationRequestStatus.OK)) return status;
+        RoomConnector reservation = rc.get();
+        reservation.setRoom(room);
 
-        roomConnectorRepo.delete(rc.get());
+        try {
+            changeReservation(reservation);
+        } catch (IllegalStateException e) {
+            return ReservationRequestStatus.DATA_RACE_LOST;
+        }
+
         return ReservationRequestStatus.OK;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    protected void changeReservation(RoomConnector reservation) {
+        Room currentRoom = roomConnectorRepo.findByPeople(reservation.getPeople()).get().getRoom();
+        if (currentRoom.getRoomConnectors().size() == 1) RoomModel.getInstance().setAllowedSex(currentRoom, Sex.ANY);
+
+        Room newRoom = roomRepo.findById(reservation.getRoom().getId()).get();
+        long reservationCountForRoom = roomConnectorRepo.countByRoom(reservation.getRoom());
+        if (reservationCountForRoom >= newRoom.getCapacity()) throw new IllegalStateException("Data race lost");
+
+
+
+        roomConnectorRepo.save(reservation);
+        //TODO: this synchronization should be avoided and the database engine should take care of it.
+        // we should find a way to do it in spring but for now it'll do. however it can be very slow if there a lot of
+        // simulations reservation request (not limited to one room queue)
+        synchronized (reservationSynchronizationObject) {
+            newRoom = roomRepo.findById(reservation.getRoom().getId()).get();
+            if (newRoom.isOverfilled()) throw new IllegalStateException("Data race lost");
+        }
     }
 
     public ReservationRequestStatus assignToRoom(People people, Room room) {
@@ -87,9 +114,6 @@ public class ReservationModel {
     protected void addReservation(RoomConnector reservation) {
         Room r = roomRepo.findById(reservation.getRoom().getId()).get();
         if (r.isOverfilled()) throw new IllegalStateException("Data race lost");
-
-        People p = peopleRepo.findById(reservation.getPeople().getId()).get();
-        if (p.getRoomConnector() != null) leaveRoom(p);
 
         roomConnectorRepo.save(reservation);
         //TODO: this synchronization should be avoided and the database engine should take care of it.

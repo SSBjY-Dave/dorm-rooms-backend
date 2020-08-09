@@ -23,14 +23,14 @@ public class RoomController {
     @PostMapping("/room/setAllowedSex")
     public RoomRequestStatus setAllowedSex(@RequestBody RoomModificationData rmd) {
         Room room;
-        if (DormRoomsUserDetailsService.isCurrentUserResident()) {
-            People people = DormRoomsUserDetailsService.getCurrentUser();
-            if (people.getRoomConnector() == null) return RoomRequestStatus.ROOM_NUMBER_DOES_NOT_EXISTS;
-            room = people.getRoomConnector().getRoom();
-        } else {
+        if (DormRoomsUserDetailsService.isCurrentUserAdmin()) {
             Optional<Room> r = RoomModel.getInstance().getDatabaseEntity(rmd.getRoom());
             if (r.isEmpty()) return RoomRequestStatus.ID_INVALID;
             room = r.get();
+        } else {
+            People people = DormRoomsUserDetailsService.getCurrentUser();
+            if (people.getRoomConnector() == null) return RoomRequestStatus.ROOM_NUMBER_DOES_NOT_EXISTS;
+            room = people.getRoomConnector().getRoom();
         }
         return RoomModel.getInstance().setAllowedSex(room, rmd.getSex());
     }

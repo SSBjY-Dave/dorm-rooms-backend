@@ -166,13 +166,13 @@ public class People {
 
     public void prepareSerialization() {
         labelConnectors.forEach(LabelConnector::prepareSerializationFromPeople);
-        roomConnector.prepareSerializationFromPeople();
+        if (roomConnector != null) roomConnector.prepareSerializationFromPeople();
         roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
     }
 
     void prepareSerializationFromLabelConnector() {
         labelConnectors = null;
-        roomConnector.prepareSerializationFromPeople();
+        if (roomConnector != null) roomConnector.prepareSerializationFromPeople();
         roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
     }
 

@@ -96,6 +96,10 @@ public class Room {
         this.sex = sex;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
     @JsonIgnore
     public boolean isFull() {
         return roomConnectors.size() >= capacity;
