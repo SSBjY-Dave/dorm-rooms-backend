@@ -46,7 +46,11 @@ public class ReservationModel {
     public ReservationRequestStatus leaveRoom(People people) {
         Optional<RoomConnector> rc = roomConnectorRepo.findByPeople(people);
         if (rc.isEmpty()) return ReservationRequestStatus.RESERVATION_NOT_FOUND;
+        Room oldRoom = rc.get().getRoom();
         roomConnectorRepo.delete(rc.get());
+
+        oldRoom = RoomModel.getInstance().getDatabaseEntity(oldRoom).get();
+        if (oldRoom.getRoomConnectors().size() == 0) RoomModel.getInstance().setAllowedSex(oldRoom, Sex.ANY);
         return ReservationRequestStatus.OK;
     }
 
@@ -60,6 +64,7 @@ public class ReservationModel {
 
     public ReservationRequestStatus changeRoom(People people, Room room) {
         Optional<RoomConnector> rc = roomConnectorRepo.findByPeople(people);
+        Room oldRoom = people.getRoomConnector().getRoom();
         if (rc.isEmpty()) return ReservationRequestStatus.RESERVATION_NOT_FOUND;
 
         RoomConnector reservation = rc.get();
@@ -71,19 +76,19 @@ public class ReservationModel {
             return ReservationRequestStatus.DATA_RACE_LOST;
         }
 
+        oldRoom = RoomModel.getInstance().getDatabaseEntity(oldRoom).get();
+        if (oldRoom.getRoomConnectors().size() == 0) RoomModel.getInstance().setAllowedSex(oldRoom, Sex.ANY);
+
         return ReservationRequestStatus.OK;
     }
 
     @Transactional(rollbackFor = Exception.class)
     protected void changeReservation(RoomConnector reservation) {
         Room currentRoom = roomConnectorRepo.findByPeople(reservation.getPeople()).get().getRoom();
-        if (currentRoom.getRoomConnectors().size() == 1) RoomModel.getInstance().setAllowedSex(currentRoom, Sex.ANY);
 
         Room newRoom = roomRepo.findById(reservation.getRoom().getId()).get();
         long reservationCountForRoom = roomConnectorRepo.countByRoom(reservation.getRoom());
         if (reservationCountForRoom >= newRoom.getCapacity()) throw new IllegalStateException("Data race lost");
-
-
 
         roomConnectorRepo.save(reservation);
         //TODO: this synchronization should be avoided and the database engine should take care of it.
@@ -114,6 +119,7 @@ public class ReservationModel {
     protected void addReservation(RoomConnector reservation) {
         Room r = roomRepo.findById(reservation.getRoom().getId()).get();
         if (r.isOverfilled()) throw new IllegalStateException("Data race lost");
+        //TODO: change room if the person is already in one
 
         roomConnectorRepo.save(reservation);
         //TODO: this synchronization should be avoided and the database engine should take care of it.
