@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 public class PeopleController {
     @PostMapping("/people/add")
     public PeopleRequestStatus[] add(@RequestBody People p) {

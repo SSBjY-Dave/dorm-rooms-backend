@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 public class LabelController {
     @PostMapping("/label/add")
     public LabelRequestStatus[] add(@RequestBody Label l) {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 public class ReservationController {
     @PostMapping("/reservation/applyForRoom")
     public ReservationRequestStatus applyForRoom(@RequestBody Room r) {

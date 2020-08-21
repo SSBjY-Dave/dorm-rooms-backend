@@ -17,7 +17,7 @@ import javax.annotation.security.RolesAllowed;
 
 //TODO: this controller must not be part of the release build
 @RestController
-@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 public class MainController {
     @RequestMapping("/")
     public String home() {

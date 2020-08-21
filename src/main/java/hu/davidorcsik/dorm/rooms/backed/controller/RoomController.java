@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 public class RoomController {
     @PostMapping("/room/setLockState")
     public RoomRequestStatus setLockState(@RequestBody RoomModificationData rmd) {
