@@ -4,6 +4,7 @@ import hu.davidorcsik.dorm.rooms.backed.database.PeopleRepo;
 import hu.davidorcsik.dorm.rooms.backed.database.RoomConnectorRepo;
 import hu.davidorcsik.dorm.rooms.backed.database.RoomRepo;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
+import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
 import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoomConnector;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
@@ -121,6 +122,7 @@ public class ReservationModel {
         if (r.isOverfilled()) throw new IllegalStateException("Data race lost");
         //TODO: change room if the person is already in one
 
+        roomConnectorRepo.findByPeople(reservation.getPeople()).ifPresent(roomConnectorRepo::delete);
         roomConnectorRepo.save(reservation);
         //TODO: this synchronization should be avoided and the database engine should take care of it.
         // we should find a way to do it in spring but for now it'll do. however it can be very slow if there a lot of
