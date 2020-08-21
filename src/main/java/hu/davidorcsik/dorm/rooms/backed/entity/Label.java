@@ -30,7 +30,8 @@ public class Label {
     public static ArrayList<LabelRequestStatus> isLabelValid(Label l) {
         ArrayList<LabelRequestStatus> status = new ArrayList<>();
 
-        if (!isIdValid(l.getId())) status.add(LabelRequestStatus.ID_INVALID);
+        //FIXME: on add l.getId() return null this is ok but the request will die here
+        //if (!isIdValid(l.getId())) status.add(LabelRequestStatus.ID_INVALID);
         if (!isNameValid(l.getName())) status.add(LabelRequestStatus.NAME_INVALID);
 
         return status;
