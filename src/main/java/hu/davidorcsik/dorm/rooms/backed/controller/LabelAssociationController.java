@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://localhost:80/")
+@CrossOrigin(origins = {"http://localhost:80", "http://localhost:4200"})
 public class LabelAssociationController {
     @PostMapping("/labelAssociation/disassociate")
     public LabelAssociationRequestStatus disassociate(@RequestBody LabelAssociationData lad) {
