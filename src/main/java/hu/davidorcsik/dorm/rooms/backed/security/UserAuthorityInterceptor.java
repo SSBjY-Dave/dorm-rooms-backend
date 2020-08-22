@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Configuration
+@Component
 public class UserAuthorityInterceptor implements HandlerInterceptor {
     private static Set<UserDetails> updateQueue = new HashSet<>();
     @Override
