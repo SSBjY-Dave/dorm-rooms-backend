@@ -23,7 +23,7 @@ import java.util.List;
 
 //TODO: this controller must not be part of the release build
 @RestController
-@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
+@CrossOrigin(origins = "*")
 public class MainController {
     @RequestMapping("/")
     public String home() {

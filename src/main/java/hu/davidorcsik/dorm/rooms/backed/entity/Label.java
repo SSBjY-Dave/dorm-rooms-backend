@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "labels")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Label {
     public static boolean isIdValid(long id) {
         return id > 0;
@@ -31,7 +30,8 @@ public class Label {
     public static ArrayList<LabelRequestStatus> isLabelValid(Label l) {
         ArrayList<LabelRequestStatus> status = new ArrayList<>();
 
-        if (!isIdValid(l.getId())) status.add(LabelRequestStatus.ID_INVALID);
+        //FIXME: on add l.getId() return null this is ok but the request will die here
+        //if (!isIdValid(l.getId())) status.add(LabelRequestStatus.ID_INVALID);
         if (!isNameValid(l.getName())) status.add(LabelRequestStatus.NAME_INVALID);
 
         return status;

@@ -1,6 +1,7 @@
 package hu.davidorcsik.dorm.rooms.backed.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -19,7 +21,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "rooms")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
     public static boolean isIdValid(long id, int level, int roomNumber) {
         return id == level * 100 + roomNumber;
@@ -96,16 +97,27 @@ public class Room {
         this.sex = sex;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    @JsonIgnore
     public boolean isFull() {
         return roomConnectors.size() >= capacity;
     }
 
+    @JsonIgnore
     public boolean isOverfilled() {
         return roomConnectors.size() > capacity;
     }
 
     public List<RoomConnector> getRoomConnectors() {
         return roomConnectors;
+    }
+
+    @JsonIgnore
+    public List<People> getResidents() {
+        return roomConnectors.stream().map(RoomConnector::getPeople).collect(Collectors.toList());
     }
 
     public void prepareSerialization() {

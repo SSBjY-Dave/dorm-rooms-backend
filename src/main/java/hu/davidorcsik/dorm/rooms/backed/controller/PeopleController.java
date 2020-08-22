@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:4200") //TODO: Modify for production server
+@CrossOrigin(origins = "*")
 public class PeopleController {
     @PostMapping("/people/add")
     public PeopleRequestStatus[] add(@RequestBody People p) {
@@ -50,6 +50,8 @@ public class PeopleController {
     @GetMapping("/people/getCurrentPerson")
     @JsonView(ResponseView.OwnerView.class)
     public People getCurrentPerson() {
-        return DormRoomsUserDetailsService.getCurrentUser();
+        People currentPerson = DormRoomsUserDetailsService.getCurrentUser();
+        currentPerson.prepareSerialization();
+        return currentPerson;
     }
 }

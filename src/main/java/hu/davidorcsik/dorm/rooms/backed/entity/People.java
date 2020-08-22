@@ -7,6 +7,8 @@ import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
@@ -21,11 +23,11 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 @Table(name = "people")
 public class People {
-    private static Pattern neptunIdPattern = Pattern.compile("^[a-z0-9]{6}$");
+    private static Pattern neptunIdPattern = Pattern.compile("^[A-Z0-9]{6}$");
     private static Pattern emailPattern = Pattern.compile("^([A-z0-9\\.\\-\\_]+)@([a-z0-9\\.\\-\\_]+)\\.([a-z]{2,})$");
 
     public static boolean isNeptunIdValid(String neptunId) {
-        neptunId = neptunId.toLowerCase();
+        neptunId = neptunId.toUpperCase();
         return neptunIdPattern.matcher(neptunId).matches();
     }
 
@@ -76,14 +78,14 @@ public class People {
     @JsonView(ResponseView.AdminView.class)
     private List<LabelConnector> labelConnectors;
 
-    @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "id", referencedColumnName = "people_id")
+    @OneToOne(mappedBy = "people", cascade = CascadeType.DETACH)
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonView(ResponseView.PublicView.class)
     private RoomConnector roomConnector;
 
     @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @Fetch(value = FetchMode.SELECT)
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonView(ResponseView.OwnerView.class)
@@ -167,13 +169,13 @@ public class People {
 
     public void prepareSerialization() {
         labelConnectors.forEach(LabelConnector::prepareSerializationFromPeople);
-        roomConnector.prepareSerializationFromPeople();
+        if (roomConnector != null) roomConnector.prepareSerializationFromPeople();
         roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
     }
 
     void prepareSerializationFromLabelConnector() {
         labelConnectors = null;
-        roomConnector.prepareSerializationFromPeople();
+        if (roomConnector != null) roomConnector.prepareSerializationFromPeople();
         roleConnectors.forEach(RoleConnector::prepareSerializationFromPeople);
     }
 
