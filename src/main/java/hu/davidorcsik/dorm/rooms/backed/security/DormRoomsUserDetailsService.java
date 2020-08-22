@@ -17,6 +17,9 @@ import java.util.Optional;
 public class DormRoomsUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return getUserByUsername(username);
+    }
+    public static UserDetails getUserByUsername(String username) throws UsernameNotFoundException {
         Optional<People> p = PeopleModel.getInstance().getDatabaseEntityByNeptunId(username);
         if (p.isEmpty()) throw new UsernameNotFoundException("User " + username + " not found");
         return new UserWrapper(p.get());

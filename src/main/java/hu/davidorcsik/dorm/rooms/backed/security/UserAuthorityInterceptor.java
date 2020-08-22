@@ -1,5 +1,6 @@
 package hu.davidorcsik.dorm.rooms.backed.security;
 
+import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.entity.Role;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserAuthorityInterceptor implements HandlerInterceptor {
-    private Set<UserDetails> updateQueue = new HashSet<>();
+    private static Set<UserDetails> updateQueue = new HashSet<>();
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         UserWrapper user = (UserWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -30,5 +31,9 @@ public class UserAuthorityInterceptor implements HandlerInterceptor {
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), correctRoles));
 
         return true;
+    }
+
+    public static void addToUpdateQueue(People people) {
+        updateQueue.add(DormRoomsUserDetailsService.getUserByUsername(people.getNeptunId()));
     }
 }

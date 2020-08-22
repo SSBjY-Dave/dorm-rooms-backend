@@ -5,6 +5,7 @@ import hu.davidorcsik.dorm.rooms.backed.entity.Role;
 import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
 import hu.davidorcsik.dorm.rooms.backed.model.RoleAssociationModel;
 import hu.davidorcsik.dorm.rooms.backed.model.RoleModel;
+import hu.davidorcsik.dorm.rooms.backed.security.UserAuthorityInterceptor;
 import hu.davidorcsik.dorm.rooms.backed.status.RoleAssociationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.RoleAssociationData;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +26,8 @@ public class RoleAssociationController {
         Optional<Role> role = RoleModel.getInstance().getDatabaseEntityByType(rad.getRoleType());
         if (role.isEmpty()) return RoleAssociationRequestStatus.ROLE_INVALID;
 
+        UserAuthorityInterceptor.addToUpdateQueue(rad.getPeople());
+
         return RoleAssociationModel.getInstance().associate(people.get(), role.get());
     }
 
@@ -35,6 +38,8 @@ public class RoleAssociationController {
 
         Optional<Role> role = RoleModel.getInstance().getDatabaseEntityByType(rad.getRoleType());
         if (role.isEmpty()) return RoleAssociationRequestStatus.ROLE_INVALID;
+
+        UserAuthorityInterceptor.addToUpdateQueue(rad.getPeople());
 
         return RoleAssociationModel.getInstance().disassociate(people.get(), role.get());
     }
