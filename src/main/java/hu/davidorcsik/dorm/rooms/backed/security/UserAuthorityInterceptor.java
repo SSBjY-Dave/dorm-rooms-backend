@@ -25,11 +25,14 @@ public class UserAuthorityInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         UserWrapper user = (UserWrapper) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("------- Auth update check");
         if (!updateQueue.contains(user)) return true;
 
+        System.out.println("------- Auth update check ok");
         List<Role> correctRoles = user.getPeople().getRoleConnectors().stream().map(RoleConnector::getRole).collect(Collectors.toList());
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), correctRoles));
 
+        System.out.println("------- Auth update finished");
         return true;
     }
 
