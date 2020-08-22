@@ -4,12 +4,10 @@ import hu.davidorcsik.dorm.rooms.backed.database.PeopleRepo;
 import hu.davidorcsik.dorm.rooms.backed.database.RoomConnectorRepo;
 import hu.davidorcsik.dorm.rooms.backed.database.RoomRepo;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
-import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
 import hu.davidorcsik.dorm.rooms.backed.entity.Room;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoomConnector;
 import hu.davidorcsik.dorm.rooms.backed.status.ReservationRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
-import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +49,7 @@ public class ReservationModel {
         roomConnectorRepo.delete(rc.get());
 
         oldRoom = RoomModel.getInstance().getDatabaseEntity(oldRoom).get();
-        if (oldRoom.getRoomConnectors().size() == 0) RoomModel.getInstance().setAllowedSex(oldRoom, Sex.ANY);
+        if (oldRoom.getRoomConnectors().size() == 0) RoomModel.getInstance().setAllowedSexUnsafe(oldRoom, Sex.ANY);
         return ReservationRequestStatus.OK;
     }
 
@@ -78,7 +76,7 @@ public class ReservationModel {
         }
 
         oldRoom = RoomModel.getInstance().getDatabaseEntity(oldRoom).get();
-        if (oldRoom.getRoomConnectors().size() == 0) RoomModel.getInstance().setAllowedSex(oldRoom, Sex.ANY);
+        if (oldRoom.getRoomConnectors().size() == 0) RoomModel.getInstance().setAllowedSexUnsafe(oldRoom, Sex.ANY);
 
         return ReservationRequestStatus.OK;
     }

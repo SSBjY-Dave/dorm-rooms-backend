@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,7 +39,14 @@ public class RoomModel {
         return RoomRequestStatus.OK;
     }
 
-    public RoomRequestStatus setAllowedSex(Room r, Sex sex) {
+    public RoomRequestStatus setAllowedSexSafe(Room r, Sex sex) {
+        List<People> residents = r.getResidents();
+        if (!sex.equals(Sex.ANY) && residents.stream().anyMatch(p -> !p.getSex().equals(sex)))
+            return RoomRequestStatus.SEX_INVALID;
+        return setAllowedSexUnsafe(r, sex);
+    }
+
+    public RoomRequestStatus setAllowedSexUnsafe(Room r, Sex sex) {
         r.setSex(sex);
         roomRepo.save(r);
         return RoomRequestStatus.OK;
