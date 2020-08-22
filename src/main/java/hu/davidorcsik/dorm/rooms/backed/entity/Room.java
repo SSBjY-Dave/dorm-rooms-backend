@@ -13,6 +13,7 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -112,6 +113,11 @@ public class Room {
 
     public List<RoomConnector> getRoomConnectors() {
         return roomConnectors;
+    }
+
+    @JsonIgnore
+    public List<People> getResidents() {
+        return roomConnectors.stream().map(RoomConnector::getPeople).collect(Collectors.toList());
     }
 
     public void prepareSerialization() {
