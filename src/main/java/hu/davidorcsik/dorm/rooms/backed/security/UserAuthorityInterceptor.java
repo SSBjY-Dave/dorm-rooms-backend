@@ -3,6 +3,7 @@ package hu.davidorcsik.dorm.rooms.backed.security;
 import hu.davidorcsik.dorm.rooms.backed.entity.People;
 import hu.davidorcsik.dorm.rooms.backed.entity.Role;
 import hu.davidorcsik.dorm.rooms.backed.entity.RoleConnector;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+@Configuration
 public class UserAuthorityInterceptor implements HandlerInterceptor {
     private static Set<UserDetails> updateQueue = new HashSet<>();
     @Override
