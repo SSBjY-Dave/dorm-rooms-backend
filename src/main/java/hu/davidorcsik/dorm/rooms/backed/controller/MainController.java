@@ -1,19 +1,25 @@
 package hu.davidorcsik.dorm.rooms.backed.controller;
 
-import hu.davidorcsik.dorm.rooms.backed.entity.People;
-import hu.davidorcsik.dorm.rooms.backed.model.PeopleModel;
-import hu.davidorcsik.dorm.rooms.backed.model.RoomModel;
-import hu.davidorcsik.dorm.rooms.backed.security.UserWrapper;
-import hu.davidorcsik.dorm.rooms.backed.types.ReservationData;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.ArrayUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.security.RolesAllowed;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 
 //TODO: this controller must not be part of the release build
 @RestController
@@ -24,8 +30,15 @@ public class MainController {
         return "home page";
     }
 
+    public static class ByteCollectorOutputStream extends OutputStream {
+        private final List<Byte> bytes = new ArrayList<>();
+        @Override
+        public void write(int b) { bytes.add((byte)b); }
+
+        public byte[] getBytes() { return (byte[]) ArrayUtils.toPrimitive(bytes.toArray(new Byte[0])); }
+    }
     @GetMapping("/test")
-    public People test() {
-        return ((UserWrapper)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPeople();
+    public String test() {
+        return "testkek meg ilyenenk";
     }
 }
