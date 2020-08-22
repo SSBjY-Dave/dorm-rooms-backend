@@ -7,6 +7,8 @@ import hu.davidorcsik.dorm.rooms.backed.security.ResponseView;
 import hu.davidorcsik.dorm.rooms.backed.status.PeopleRequestStatus;
 import hu.davidorcsik.dorm.rooms.backed.types.Sex;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
@@ -83,6 +85,7 @@ public class People {
     private RoomConnector roomConnector;
 
     @OneToMany(mappedBy = "people", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @Fetch(value = FetchMode.SELECT)
     @ReadOnlyProperty
     @ToString.Exclude
     @JsonView(ResponseView.OwnerView.class)
